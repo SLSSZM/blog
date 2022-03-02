@@ -90,6 +90,8 @@
       .el-form-item {
         width: 30%;
         min-width: 300px;
+        margin-left: 10px;
+        margin-right: 10px;
         .el-select {
           width: 100%;
         }

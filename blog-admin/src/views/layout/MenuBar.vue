@@ -50,7 +50,6 @@
 
 <style scoped lang="scss">
   .el-menu {
-    // height: 100%;
     border: none;
   }
   .el-menu-vertical-demo:not(.el-menu--collapse) {

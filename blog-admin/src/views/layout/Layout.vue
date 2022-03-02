@@ -2,7 +2,7 @@
   import MenuBar from './MenuBar.vue';
   import { Expand } from '@element-plus/icons-vue';
   import { inject, Ref, ref, watch } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
 
   // 设置响应式
   const clientLevel = inject<Ref<number>>('clientLevel', ref<number>(1));
@@ -20,6 +20,7 @@
   };
 
   const route = useRoute();
+  const router = useRouter();
 </script>
 
 <template>
@@ -30,6 +31,7 @@
     <el-container>
       <el-header>
         <el-icon @click="isCollapse = !isCollapse"><expand /></el-icon>
+        <div class="account" @click="router.replace('/login')" title="退出登录"></div>
       </el-header>
       <el-main>
         <router-view v-slot="{ Component }" :key="route.path">
@@ -59,19 +61,30 @@
 
 <style scoped lang="scss">
   .el-container {
+    height: 100vh;
     color: $color;
     background: $background_color;
     .el-aside {
       background: $background_color_content;
+      border-right: 1px solid $border_color;
     }
     .el-header {
       background-color: $background_color_content;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid $border_color;
       .el-icon {
         font-size: 25px;
         opacity: 0.6;
         color: $color;
+        cursor: pointer;
+      }
+      .account {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #ee4863;
         cursor: pointer;
       }
     }
@@ -82,6 +95,7 @@
       .el-card {
         height: 100%;
         background-color: $background_color_content;
+        border: none;
       }
     }
   }
