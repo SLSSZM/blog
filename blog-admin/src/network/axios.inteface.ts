@@ -27,23 +27,39 @@ export abstract class Transform {
   /**
    * @description: 请求拦截错误处理
    */
-  requestInterceptorsCatch?: (error: Error | AxiosError) => void;
+  requestInterceptorsCatch?: (error: AxiosError) => void;
 
   /**
    * @description: 响应拦截错误处理
    */
-  responseInterceptorsCatch?: (error: Error | AxiosError) => void;
+  responseInterceptorsCatch?: (error: AxiosError) => void;
   /**
    * @description 请求失败处理
    */
-  requestCatchHook?: (err: Error | AxiosError) => void;
+  requestCatchHook?: (err: AxiosError) => void;
 }
 /**
  * @interface 响应数据格式
  */
 export interface ResponseResult<T = any> {
   code: number;
-  path: string;
-  success: boolean;
   data: T;
+  token: string;
+}
+
+/**
+ * @interface 请求数据格式
+ */
+export interface RequestOptions {
+  page?: number;
+  count?: number;
+  total?: number;
+}
+
+/**
+ * @interface 响应数据格式
+ */
+export interface ResponseListData<T> {
+  total: number;
+  list: T[];
 }

@@ -90,7 +90,7 @@ export class HttpRequest {
             resolve(res as unknown as T);
           }
         })
-        .catch((err: Error | AxiosError): void => {
+        .catch((err: AxiosError): void => {
           const transform = this.options.transform;
           if (transform) {
             transform.requestCatchHook && transform.requestCatchHook(err);
@@ -110,7 +110,7 @@ export class HttpRequest {
             resolve(res as unknown as T);
           }
         })
-        .catch((err: Error | AxiosError): void => {
+        .catch((err: AxiosError): void => {
           const transform = this.options.transform;
           if (transform) {
             transform.requestCatchHook && transform.requestCatchHook(err);
@@ -130,7 +130,7 @@ export class HttpRequest {
             resolve(res as unknown as T);
           }
         })
-        .catch((err: Error | AxiosError): void => {
+        .catch((err: AxiosError): void => {
           const transform = this.options.transform;
           if (transform) {
             transform.requestCatchHook && transform.requestCatchHook(err);
@@ -150,7 +150,7 @@ export class HttpRequest {
             resolve(res as unknown as T);
           }
         })
-        .catch((err: Error | AxiosError): void => {
+        .catch((err: AxiosError): void => {
           const transform = this.options.transform;
           if (transform) {
             transform.requestCatchHook && transform.requestCatchHook(err);
@@ -170,7 +170,7 @@ export class HttpRequest {
             resolve(res as unknown as T);
           }
         })
-        .catch((err: Error | AxiosError): void => {
+        .catch((err: AxiosError): void => {
           const transform = this.options.transform;
           if (transform) {
             transform.requestCatchHook && transform.requestCatchHook(err);

@@ -1,13 +1,8 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue';
   import Editor from '@/components/Editor.vue';
-  import Markdown from '@/components/Markdown.vue';
-  import { useRoute } from 'vue-router';
 
-  const route = useRoute();
-
-  let editorType = ref<string>('editor');
-  let article = reactive<{ title: string; tag: string[]; content: string }>({
+  let post = reactive<{ title: string; tag: string[]; content: string }>({
     title: '',
     tag: [],
     content: '',
@@ -20,10 +15,10 @@
 
 <template>
   <div class="edit">
-    <el-form inline ref="articleRef" :model="article" :rules="rules">
+    <el-form inline ref="postRef" :model="post" :rules="rules">
       <el-form-item prop="title">
         <el-input
-          v-model="article.title"
+          v-model="post.title"
           size="large"
           placeholder="请输入文章标题"
           clearable
@@ -31,7 +26,7 @@
       </el-form-item>
       <el-form-item prop="tag">
         <el-select
-          v-model="article.tag"
+          v-model="post.tag"
           size="large"
           placeholder="请选择标签"
           clearable
@@ -45,36 +40,7 @@
         </div>
       </el-form-item>
     </el-form>
-    <div class="changeEditor" v-if="route.path === '/article/create'">
-      <el-button
-        :type="editorType === 'editor' ? 'primary' : 'info'"
-        @click="editorType = 'editor'"
-        size="large"
-        :plain="editorType === 'editor' ? false : true"
-        round
-      >
-        富文本编辑器
-      </el-button>
-      <el-button
-        :type="editorType === 'markdown' ? 'primary' : 'info'"
-        @click="editorType = 'markdown'"
-        size="large"
-        :plain="editorType === 'markdown' ? false : true"
-        round
-      >
-        Markdown
-      </el-button>
-    </div>
-    <editor
-      v-if="editorType === 'editor'"
-      :value="article.content"
-      @data="article.content = $event"
-    />
-    <markdown
-      v-if="editorType === 'markdown'"
-      :value="article.content"
-      @data="article.content = $event"
-    />
+    <editor :value="post.content" @data="post.content = $event" />
   </div>
 </template>
 

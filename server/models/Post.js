@@ -6,10 +6,12 @@ const schema = new mongoose.Schema(
     title: { type: String },
     tag: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Tag' }],
     body: { type: String },
+    status: { type: Boolean },
+    comment: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Comment' }],
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model('Article', schema);
+module.exports = mongoose.model('Post', schema);
