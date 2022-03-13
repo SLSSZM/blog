@@ -36,7 +36,7 @@
         <el-icon><document-add /></el-icon>
         新建文章
       </el-menu-item>
-      <el-menu-item index="/post/edit" v-if="route.path === '/post/edit'">
+      <el-menu-item index="/post/edit" v-show="route.path === '/post/edit'">
         <el-icon><edit /></el-icon>
         编辑文章
       </el-menu-item>

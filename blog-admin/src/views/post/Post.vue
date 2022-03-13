@@ -1,27 +1,31 @@
 <script setup lang="ts">
-  import { fetchPostApi, fetchPostOneApi, Post } from '@/network/api/post';
+  import { deletePostApi, fetchPostApi, fetchPostOneApi, Post } from '@/network/api/post';
   import { Edit, Delete } from '@element-plus/icons-vue';
   import { inject, Ref, ref } from 'vue';
   import dayjs from 'dayjs';
   import { useRouter } from 'vue-router';
+  import { ElMessage } from 'element-plus';
 
   let tableData = ref<Post[]>([]);
   let loading = ref<boolean>(false);
-  let currentPage = ref<number>(1);
+  let page = ref<number>(1);
+  let total = ref<number>(0);
+  let count = ref<number>(8);
 
   const fetchPost = async (): Promise<void> => {
     loading.value = true;
-    const res = await fetchPostApi();
+    const res = await fetchPostApi({ page: page.value, count: count.value });
     tableData.value = res.data.list;
+    total.value = res.data.total;
     loading.value = false;
   };
   fetchPost();
   const handlerQuery = (): void => {
-    currentPage.value = 1;
+    page.value = 1;
     fetchPost();
   };
   const currentChange = (value: number): void => {
-    currentPage.value = value;
+    page.value = value;
     fetchPost();
   };
 
@@ -33,7 +37,12 @@
   const router = useRouter();
   const handlerUpdate = async (id: string): Promise<void> => {
     const res = await fetchPostOneApi(id);
-    // router.push({ path: '/post/edit', query: res.data as any });
+    router.push({ path: '/post/edit', query: res.data as any });
+  };
+  const handlerDelete = async (id: string): Promise<void> => {
+    await deletePostApi(id);
+    ElMessage.success('删除成功');
+    fetchPost();
   };
 </script>
 
@@ -66,7 +75,7 @@
           <el-button round @click="handlerUpdate(row._id)">
             <el-icon><edit /></el-icon>
           </el-button>
-          <el-button round>
+          <el-button round @click="handlerDelete(row._id)">
             <el-icon><delete /></el-icon>
           </el-button>
         </template>
@@ -74,10 +83,11 @@
     </el-table>
     <el-pagination
       background
-      layout="prev, pager, next"
-      :total="100"
+      layout="total, prev, pager, next"
+      :total="total"
       :pager-count="5"
-      :current-page="currentPage"
+      :current-page="page"
+      :page-size="count"
       @current-change="currentChange"
     >
     </el-pagination>

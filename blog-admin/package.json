@@ -10,19 +10,14 @@
   "dependencies": {
     "@element-plus/icons-vue": "^0.2.7",
     "@kangc/v-md-editor": "^2.3.14",
-    "@tinymce/tinymce-vue": "^4.0.6",
     "axios": "^0.25.0",
-    "dayjs": "^1.10.8",
     "element-plus": "^2.0.1",
-    "md-editor-v3": "^1.11.1",
     "pinia": "^2.0.11",
-    "tinymce": "^5.10.3",
     "vue": "^3.2.25",
     "vue-router": "4"
   },
   "devDependencies": {
     "@types/node": "^17.0.18",
-    "@types/tinymce": "^4.6.4",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",
     "@vitejs/plugin-vue": "^2.2.0",

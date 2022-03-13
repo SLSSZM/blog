@@ -32,7 +32,7 @@ const transform: Transform = {
 };
 
 export const http: HttpRequest = new HttpRequest({
-  baseURL: 'http://192.168.8.101:3001/api',
+  baseURL: 'http://localhost:3001/api',
   timeout: 12000,
   transform,
   ignoreRepeatRequests: true,

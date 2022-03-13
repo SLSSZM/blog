@@ -1,16 +1,18 @@
 <script setup lang="ts">
-  import { createPostApi, Post } from '@/network/api/post';
+  import { createPostApi, Post, updatePostApi } from '@/network/api/post';
   import { fetchTagApi, Tag } from '@/network/api/tag';
   import { ElMessage } from 'element-plus';
   import { defineAsyncComponent, reactive, ref } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   const Markdown = defineAsyncComponent(() => import('@/components/markdown/Markdown.vue'));
 
-  let post = reactive<Post>({
-    title: '',
-    tag: [],
-    content: '',
-    status: false,
+  let post = reactive<{ data: Post }>({
+    data: {
+      title: '',
+      tag: [],
+      body: '',
+      status: false,
+    },
   });
   let rules = reactive({
     title: { required: true, message: '请输入文章标题', trigger: 'blur' },
@@ -23,31 +25,44 @@
   };
   fetchTag();
   const router = useRouter();
-  const handlerCreate = async (status: boolean): Promise<void> => {
-    post.status = status;
-    await createPostApi(post);
-    router.push('/post');
-    if (status) {
-      ElMessage.success('提交成功');
-    } else {
-      ElMessage.success('保存成功');
-    }
+  const route = useRoute();
+  if (route.query._id) {
+    post.data = route.query as any;
+  }
+  let postRef = ref<any>();
+  const handlerSave = async (status: boolean): Promise<void> => {
+    await postRef.value.validate(async (valid: boolean) => {
+      if (valid) {
+        post.data.status = status;
+        if (route.query._id) {
+          await updatePostApi(post.data._id!, post.data);
+        } else {
+          await createPostApi(post.data);
+        }
+        router.push('/post');
+        if (status) {
+          ElMessage.success('提交成功');
+        } else {
+          ElMessage.success('保存成功');
+        }
+      }
+    });
   };
 </script>
 
 <template>
   <div class="edit">
-    <el-form inline ref="postRef" :model="post" :rules="rules">
+    <el-form inline ref="postRef" :model="post.data" :rules="rules">
       <el-form-item prop="title">
         <el-input
-          v-model="post.title"
+          v-model="post.data.title"
           size="large"
           placeholder="请输入文章标题"
           clearable
         ></el-input>
       </el-form-item>
       <el-form-item prop="tag">
-        <el-select v-model="post.tag" size="large" placeholder="请选择标签" clearable multiple>
+        <el-select v-model="post.data.tag" size="large" placeholder="请选择标签" clearable multiple>
           <el-option
             v-for="item in tags.data"
             :key="item._id"
@@ -58,12 +73,12 @@
       </el-form-item>
       <el-form-item>
         <div class="btn">
-          <el-button type="info" @click="handlerCreate(false)">保存文章</el-button>
-          <el-button type="primary" @click="handlerCreate(true)">提交文章</el-button>
+          <el-button type="info" @click="handlerSave(false)">保存文章</el-button>
+          <el-button type="primary" @click="handlerSave(true)">提交文章</el-button>
         </div>
       </el-form-item>
     </el-form>
-    <markdown :value="post.content" />
+    <markdown :value="post.data.body" @change="post.data.body = $event" />
   </div>
 </template>
 

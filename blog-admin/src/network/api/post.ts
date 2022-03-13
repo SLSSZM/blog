@@ -3,10 +3,10 @@ import { RequestOptions, ResponseListData, ResponseResult } from '../axios.intef
 
 export interface Post {
   _id?: string;
-  title: string;
-  content: string;
-  tag: string[];
-  status: boolean;
+  title?: string;
+  body?: string;
+  tag?: string[];
+  status?: boolean;
 }
 
 interface Query extends Post, RequestOptions {}

@@ -16,8 +16,8 @@ const routes = [
     children: [
       { path: '', component: Workbench },
       { path: '/post', name: 'Post', component: Post },
-      { path: '/post/:create', name: 'PostCreate', component: Edit },
-      { path: '/post/:update', name: 'PostUpdate', component: Edit },
+      { path: '/post/create', name: 'PostCreate', component: Edit },
+      { path: '/post/edit', name: 'PostUpdate', component: Edit },
       { path: '/tag', component: Tag },
     ],
   },
