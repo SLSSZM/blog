@@ -1,5 +1,6 @@
 import { ResponseResult, Transform } from '@/network/axios.inteface';
 import { HttpRequest } from '@/network/HttpRequest';
+import router from '@/router';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ElMessage } from 'element-plus';
 
@@ -23,6 +24,10 @@ const transform: Transform = {
     if (err.response?.data) {
       ElMessage.error(err.response.data.message);
     }
+    if (err.response?.data?.code === 401) {
+      router.replace('/login');
+    }
+    console.log(err);
   },
 };
 

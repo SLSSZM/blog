@@ -8,14 +8,16 @@ const Login = () => import('@/views/login/Login.vue');
 
 const routes = [
   { path: '/', redirect: '/workbench' },
-  { path: '/login', component: Login },
+  { path: '/login', name: 'Login', component: Login },
   {
     path: '/workbench',
+    name: 'Workbench',
     component: Layout,
     children: [
       { path: '', component: Workbench },
-      { path: '/post', component: Post },
-      { path: '/post/:type', component: Edit },
+      { path: '/post', name: 'Post', component: Post },
+      { path: '/post/:create', name: 'PostCreate', component: Edit },
+      { path: '/post/:update', name: 'PostUpdate', component: Edit },
       { path: '/tag', component: Tag },
     ],
   },

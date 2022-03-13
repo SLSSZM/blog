@@ -36,7 +36,7 @@
       <el-main>
         <router-view v-slot="{ Component }" :key="route.path">
           <keep-alive>
-            <el-card :body-style="{ overflow: 'auto' }">
+            <el-card>
               <component :is="Component" />
             </el-card>
           </keep-alive>
@@ -91,9 +91,9 @@
     .el-main {
       width: 100%;
       padding: 0;
-      overflow: hidden;
       .el-card {
         height: 100%;
+        overflow: auto;
         background-color: $background_color_content;
         border: none;
       }

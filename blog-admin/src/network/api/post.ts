@@ -1,18 +1,30 @@
 import { http } from '..';
-import { ResponseResult } from '../axios.inteface';
+import { RequestOptions, ResponseListData, ResponseResult } from '../axios.inteface';
 
 export interface Post {
   _id?: string;
   title: string;
   content: string;
   tag: string[];
-  status?: '';
+  status: boolean;
 }
 
-export async function fetchPostApi<T>(): Promise<ResponseResult<T>> {
-  return await http.get<ResponseResult<T>>('/admin/rest/post');
-}
+interface Query extends Post, RequestOptions {}
 
-export async function createPostApi<T>(post: Post): Promise<ResponseResult<T>> {
-  return await http.post<ResponseResult<T>>('/admin/rest/post', post);
+export async function fetchPostApi(query?: Query): Promise<ResponseResult<ResponseListData<Post>>> {
+  return await http.get<ResponseResult<ResponseListData<Post>>>('/admin/rest/post', {
+    params: query || {},
+  });
+}
+export async function createPostApi(post: Post): Promise<ResponseResult<Post>> {
+  return await http.post<ResponseResult<Post>>('/admin/rest/post', post);
+}
+export async function fetchPostOneApi(id: string): Promise<ResponseResult<Post>> {
+  return await http.get<ResponseResult<Post>>('/admin/rest/post/' + id);
+}
+export async function updatePostApi(id: string, post: Post): Promise<ResponseResult<Post>> {
+  return await http.put<ResponseResult<Post>>('/admin/rest/post/' + id, post);
+}
+export async function deletePostApi(id: string): Promise<ResponseResult<Post>> {
+  return await http.delete<ResponseResult<Post>>('/admin/rest/post/' + id);
 }

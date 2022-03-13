@@ -1,7 +1,9 @@
 <script setup lang="ts">
-  import { fetchPostApi, Post } from '@/network/api/post';
+  import { fetchPostApi, fetchPostOneApi, Post } from '@/network/api/post';
   import { Edit, Delete } from '@element-plus/icons-vue';
   import { inject, Ref, ref } from 'vue';
+  import dayjs from 'dayjs';
+  import { useRouter } from 'vue-router';
 
   let tableData = ref<Post[]>([]);
   let loading = ref<boolean>(false);
@@ -9,8 +11,8 @@
 
   const fetchPost = async (): Promise<void> => {
     loading.value = true;
-    const res = await fetchPostApi<Post[]>();
-    tableData.value = res.data;
+    const res = await fetchPostApi();
+    tableData.value = res.data.list;
     loading.value = false;
   };
   fetchPost();
@@ -27,6 +29,12 @@
 
   // 设置响应式
   const clientLevel = inject<Ref<number>>('clientLevel', ref<number>(1));
+
+  const router = useRouter();
+  const handlerUpdate = async (id: string): Promise<void> => {
+    const res = await fetchPostOneApi(id);
+    // router.push({ path: '/post/edit', query: res.data as any });
+  };
 </script>
 
 <template>
@@ -38,10 +46,14 @@
     <el-table :data="tableData" v-loading="loading">
       <el-table-column type="index" fixed />
       <el-table-column prop="title" label="标题" min-width="160px" />
-      <el-table-column prop="createTime" label="创建时间" min-width="180px" />
+      <el-table-column prop="createTime" label="创建时间" min-width="180px">
+        <template #default="{ row }">
+          {{ dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column prop="status" label="状态" min-width="100px">
         <template #default="{ row }">
-          <el-tag>{{ row.status }}</el-tag>
+          <el-tag :type="row.status ? '' : 'warning'">{{ row.status ? '已提交' : '草稿' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -50,12 +62,14 @@
         :fixed="clientLevel === 3 ? false : 'right'"
         label="修改 / 删除"
       >
-        <el-button round>
-          <el-icon><edit /></el-icon>
-        </el-button>
-        <el-button round>
-          <el-icon><delete /></el-icon>
-        </el-button>
+        <template #default="{ row }">
+          <el-button round @click="handlerUpdate(row._id)">
+            <el-icon><edit /></el-icon>
+          </el-button>
+          <el-button round>
+            <el-icon><delete /></el-icon>
+          </el-button>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination
