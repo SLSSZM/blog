@@ -1,6 +1,7 @@
 module.exports = app => {
   const router = require('express').Router();
   const AdminUser = require('../../models/AdminUser.js');
+  const Article = require('../../models/Article.js');
   const assert = require('http-assert');
   const bcrypt = require('bcryptjs');
   const jwt = require('jsonwebtoken');
@@ -24,7 +25,7 @@ module.exports = app => {
     query.userId = req.user._id;
 
     let queryOptions = {};
-    if (req.Model.modelName === 'Post') {
+    if (req.Model.modelName === 'Article') {
       queryOptions.populate = 'tag';
     }
     page && (queryOptions.skip = count * (page - 1));
@@ -116,7 +117,15 @@ module.exports = app => {
       code: 200,
     });
   });
-  app.get('/', (req, res) => {
-    res.send('123');
+  // 访问量
+  app.get('/api/admin/workbench', auth(app), async (req, res) => {
+    const userViews = req.user.views;
+    const articleTotal = await Article.find({ userId: req.user._id }).count();
+    const hotArticles = await Article.find({ userId: req.user._id }).sort({ views: -1 }).limit(3);
+    res.send({
+      code: 200,
+      data: { userViews, articleTotal, hotArticles },
+      token: req.token,
+    });
   });
 };

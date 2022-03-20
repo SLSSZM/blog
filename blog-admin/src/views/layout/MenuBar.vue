@@ -29,14 +29,14 @@
         <el-icon><collection /></el-icon>
         <span>文章管理</span>
       </template>
-      <el-menu-item index="/post">
+      <el-menu-item index="/article">
         <el-icon><list /></el-icon>文章列表
       </el-menu-item>
-      <el-menu-item index="/post/create">
+      <el-menu-item index="/article/create">
         <el-icon><document-add /></el-icon>
         新建文章
       </el-menu-item>
-      <el-menu-item index="/post/edit" v-show="route.path === '/post/edit'">
+      <el-menu-item index="/article/edit" v-show="route.path === '/article/edit'">
         <el-icon><edit /></el-icon>
         编辑文章
       </el-menu-item>

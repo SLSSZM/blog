@@ -1,24 +1,30 @@
 <script setup lang="ts">
-  import { deletePostApi, fetchPostApi, fetchPostOneApi, Post } from '@/network/api/post';
+  import { deletePostApi, fetchPostApi, fetchPostOneApi, Article } from '@/network/api/article';
   import { Edit, Delete } from '@element-plus/icons-vue';
   import { inject, Ref, ref } from 'vue';
   import dayjs from 'dayjs';
   import { useRouter } from 'vue-router';
   import { ElMessage } from 'element-plus';
 
-  let tableData = ref<Post[]>([]);
+  let tableData = ref<Article[]>([]);
   let loading = ref<boolean>(false);
   let page = ref<number>(1);
   let total = ref<number>(0);
   let count = ref<number>(8);
+  let searchTitle = ref<string>('');
 
   const fetchPost = async (): Promise<void> => {
     loading.value = true;
-    const res = await fetchPostApi({ page: page.value, count: count.value });
+    const res = await fetchPostApi({
+      page: page.value,
+      count: count.value,
+      title: searchTitle.value,
+    });
     tableData.value = res.data.list;
     total.value = res.data.total;
     loading.value = false;
   };
+
   fetchPost();
   const handlerQuery = (): void => {
     page.value = 1;
@@ -29,15 +35,13 @@
     fetchPost();
   };
 
-  let searchTitle = ref<string>('');
-
   // 设置响应式
   const clientLevel = inject<Ref<number>>('clientLevel', ref<number>(1));
 
   const router = useRouter();
   const handlerUpdate = async (id: string): Promise<void> => {
     const res = await fetchPostOneApi(id);
-    router.push({ path: '/post/edit', query: res.data as any });
+    router.push({ path: '/article/edit', query: res.data as any });
   };
   const handlerDelete = async (id: string): Promise<void> => {
     await deletePostApi(id);
@@ -60,9 +64,19 @@
           {{ dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态" min-width="100px">
+      <el-table-column prop="views" label="访问量" />
+      <el-table-column prop="type" label="类型" min-width="100px">
         <template #default="{ row }">
-          <el-tag :type="row.status ? '' : 'warning'">{{ row.status ? '已提交' : '草稿' }}</el-tag>
+          <el-tag size="large">
+            {{ row.type === 'post' ? '博客' : '日常' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="submit" label="状态" min-width="100px">
+        <template #default="{ row }">
+          <el-tag size="large" :type="row.submit ? '' : 'warning'">{{
+            row.status ? '已提交' : '草稿'
+          }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column

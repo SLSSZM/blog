@@ -31,6 +31,7 @@
     <el-container>
       <el-header>
         <el-icon @click="isCollapse = !isCollapse"><expand /></el-icon>
+        <h1>山岚设色</h1>
         <div class="account" @click="router.replace('/login')" title="退出登录"></div>
       </el-header>
       <el-main>
@@ -74,6 +75,10 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid $border_color;
+      h1 {
+        color: $color_tint;
+        margin: 0;
+      }
       .el-icon {
         font-size: 25px;
         opacity: 0.6;
