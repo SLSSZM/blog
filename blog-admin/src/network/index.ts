@@ -7,7 +7,7 @@ import { ElMessage } from 'element-plus';
 const transform: Transform = {
   requestInterceptors: (config: AxiosRequestConfig): AxiosRequestConfig => {
     if (config.headers) {
-      const token = localStorage.getItem('token');
+      const token = localStorage.token;
       config.headers.authorization = 'Bearer ' + token;
     }
     return config;

@@ -8,6 +8,8 @@ module.exports = app => {
   const resource = require('../../middleware/resource');
   const auth = require('../../middleware/auth.js');
   const redis = require('../../plugin/redis');
+  const multer = require('multer');
+  require('./config')(app);
 
   router.get('/', async (req, res) => {
     let query = req.query || {};
@@ -108,6 +110,12 @@ module.exports = app => {
   });
   // 退出登陆
   app.delete('/api/admin/loginout', async (req, res) => {
+    if (!req?.headers?.authorization) {
+      res.send({
+        code: 200,
+      });
+      return;
+    }
     const token = String(req?.headers?.authorization || '')
       ?.split(' ')
       ?.pop();
@@ -125,6 +133,17 @@ module.exports = app => {
     res.send({
       code: 200,
       data: { userViews, articleTotal, hotArticles },
+      token: req.token,
+    });
+  });
+  // 图片上传api
+  const upload = multer({ dest: __dirname + '/../../uploads' });
+  app.post('/api/admin/upload', auth(app), upload.single('file'), (req, res) => {
+    const file = req.file;
+    file.url = 'http://localhost:3001/uploads/' + file.filename;
+    res.send({
+      code: 200,
+      data: file,
       token: req.token,
     });
   });

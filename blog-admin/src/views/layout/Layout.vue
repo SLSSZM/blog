@@ -3,6 +3,7 @@
   import { Expand } from '@element-plus/icons-vue';
   import { inject, Ref, ref, watch } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { loginoutApi } from '@/network/api/base';
 
   // 设置响应式
   const clientLevel = inject<Ref<number>>('clientLevel', ref<number>(1));
@@ -21,6 +22,11 @@
 
   const route = useRoute();
   const router = useRouter();
+
+  const loginOut = async (): Promise<void> => {
+    await loginoutApi();
+    router.replace('/login');
+  };
 </script>
 
 <template>
@@ -32,7 +38,7 @@
       <el-header>
         <el-icon @click="isCollapse = !isCollapse"><expand /></el-icon>
         <h1>山岚设色</h1>
-        <div class="account" @click="router.replace('/login')" title="退出登录"></div>
+        <div class="account" @click="loginOut" title="退出登录"></div>
       </el-header>
       <el-main>
         <router-view v-slot="{ Component }" :key="route.path">

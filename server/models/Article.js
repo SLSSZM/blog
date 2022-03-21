@@ -9,6 +9,7 @@ const schema = new mongoose.Schema(
     tag: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Tag' }],
     body: { type: String },
     submit: { type: Boolean },
+    image: { type: String },
     type: { type: String, enum: Type },
     views: { type: Number, default: 0 },
     comment: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Comment' }],

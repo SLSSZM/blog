@@ -1,5 +1,14 @@
 <script setup lang="ts">
-  import { Platform, Collection, List, DocumentAdd, Edit, PriceTag } from '@element-plus/icons-vue';
+  import {
+    Platform,
+    Collection,
+    List,
+    DocumentAdd,
+    Edit,
+    PriceTag,
+    Message,
+    Setting,
+  } from '@element-plus/icons-vue';
   import { useRoute } from 'vue-router';
   const route = useRoute();
 
@@ -24,6 +33,10 @@
       <el-icon><platform /></el-icon>
       <span>工作台</span>
     </el-menu-item>
+    <el-menu-item index="/config">
+      <el-icon><setting /></el-icon>
+      <span>页面设置</span>
+    </el-menu-item>
     <el-sub-menu index="/post">
       <template #title>
         <el-icon><collection /></el-icon>
@@ -44,6 +57,10 @@
     <el-menu-item index="/tag">
       <el-icon><price-tag /></el-icon>
       <span>标签管理</span>
+    </el-menu-item>
+    <el-menu-item index="/message">
+      <el-icon><message /></el-icon>
+      <span>留言管理</span>
     </el-menu-item>
   </el-menu>
 </template>
