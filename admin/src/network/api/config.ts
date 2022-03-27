@@ -3,6 +3,7 @@ import { ResponseResult } from '../axios.inteface';
 
 export interface Config {
   image?: string;
+  userAvatar?: string;
 }
 
 export async function fetchConfigApi(): Promise<ResponseResult<Config>> {

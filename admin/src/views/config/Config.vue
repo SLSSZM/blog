@@ -21,6 +21,9 @@
     <el-form-item label="一言背景图：">
       <upload-picture :image="config.data.image" @upload="config.data.image = $event" />
     </el-form-item>
+    <el-form-item label="用户默认头像：">
+      <upload-picture :image="config.data.userAvatar" @upload="config.data.userAvatar = $event" />
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" auto-insert-space @click="handlerSave">保存</el-button>
     </el-form-item>

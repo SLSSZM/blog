@@ -9,6 +9,7 @@ export interface Article {
   tag?: string[];
   type?: string;
   submit?: boolean;
+  image?: string;
 }
 
 interface Query extends Article, RequestOptions {}

@@ -93,7 +93,7 @@
     margin: 20px 10px;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 6px 1px rgba($color: #5a5a5a, $alpha: 0.3);
+    box-shadow: 0 0 10px 1px rgba($color: #5a5a5a, $alpha: 0.1);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;

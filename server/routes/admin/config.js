@@ -7,7 +7,7 @@ module.exports = app => {
   router.get('/', async (req, res) => {
     let model = await Config.findOne({ userId: req.user._id });
     if (!model) {
-      model = await Config.create({ image: '', userId: req.user._id });
+      model = await Config.create({ userId: req.user._id });
     }
     res.send({
       code: 200,

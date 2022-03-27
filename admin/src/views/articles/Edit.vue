@@ -4,6 +4,7 @@
   import { ElMessage } from 'element-plus';
   import { defineAsyncComponent, reactive, ref } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
+  import UploadPicture from '@/components/element/UploadPicture.vue';
   const Markdown = defineAsyncComponent(() => import('@/components/markdown/Markdown.vue'));
 
   let article = reactive<{ data: Article }>({
@@ -67,6 +68,14 @@
       <el-form-item prop="title" label="标题" style="width: 100%">
         <el-input v-model="article.data.title" placeholder="请输入文章标题" clearable></el-input>
       </el-form-item>
+      <el-form-item prop="description" style="width: 100%" label="描述">
+        <el-input
+          v-model="article.data.description"
+          type="textarea"
+          placeholder="请输入文章描述"
+          clearable
+        ></el-input>
+      </el-form-item>
       <el-form-item prop="tag" label="标签">
         <el-select v-model="article.data.tag" placeholder="请选择文章标签" clearable multiple>
           <el-option
@@ -83,14 +92,16 @@
           <el-radio-button label="article">日常</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item prop="description" style="width: 100%" label="描述">
-        <el-input
-          v-model="article.data.description"
-          type="textarea"
-          placeholder="请输入文章描述"
-          clearable
-        ></el-input>
+      <el-form-item prop="image" label="图片" style="width: 100%">
+        <upload-picture
+          :image="article.data.image"
+          @upload="article.data.image = $event"
+          style="width: 100%"
+        />
       </el-form-item>
+      <el-from-item style="width: 100%; margin-bottom: 20px">
+        <markdown :value="article.data.body" @change="article.data.body = $event" />
+      </el-from-item>
       <el-form-item>
         <div class="btn">
           <el-button plain type="info" @click="handlerSave(false)">
@@ -100,7 +111,6 @@
         </div>
       </el-form-item>
     </el-form>
-    <markdown :value="article.data.body" @change="article.data.body = $event" />
   </div>
 </template>
 
