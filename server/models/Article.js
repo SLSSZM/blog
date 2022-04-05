@@ -3,7 +3,7 @@ const { Type } = require('../common/enum');
 
 const schema = new mongoose.Schema(
   {
-    userId: { type: mongoose.SchemaTypes.ObjectId, ref: 'AdminUser', index: true },
+    userId: { type: mongoose.SchemaTypes.ObjectId, ref: 'AdminUser', index: true, select: false },
     title: { type: String, index: true },
     description: { type: String },
     tag: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Tag' }],

@@ -1,0 +1,39 @@
+{
+  "pages": [
+    {
+      "path": "pages/login/Login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/message/Message"
+    },
+    {
+      "path": "pages/profile/Profile"
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "navigationBarTitleText": "山岚设色"
+  },
+  "tabBar": {
+    "color": "#000",
+    "selectedColor": "#0478be",
+    "backgroundColor": "#fff",
+    "borderStyle": "white",
+    "height": "100px",
+    "list": [
+      {
+        "pagePath": "pages/message/Message",
+        "text": "留言"
+      },
+      {
+        "pagePath": "pages/profile/Profile",
+        "text": "我的"
+      }
+    ]
+  }
+}

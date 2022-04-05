@@ -75,7 +75,7 @@
       <el-table-column prop="submit" label="状态" min-width="100px">
         <template #default="{ row }">
           <el-tag size="large" :type="row.submit ? '' : 'warning'">{{
-            row.status ? '已提交' : '草稿'
+            row.submit ? '已提交' : '草稿'
           }}</el-tag>
         </template>
       </el-table-column>

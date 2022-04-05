@@ -1,25 +1,41 @@
 {
+  "name": "web",
   "private": true,
+  "version": "0.0.0",
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build",
-    "start": "node .output/server/index.mjs"
-  },
-  "devDependencies": {
-    "@nuxtjs/eslint-config-typescript": "^9.0.0",
-    "@nuxtjs/eslint-module": "^3.0.2",
-    "eslint": "^8.12.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-nuxt": "^3.2.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "nuxt3": "latest",
-    "prettier": "^2.6.1",
-    "typescript": "^4.6.3"
+    "dev": "node server",
+    "build": "yarn build:client && yarn build:server",
+    "build:client": "vite build --ssrManifest --outDir dist/client",
+    "build:server": "vite build --ssr src/entry-server.js --outDir dist/server",
+    "serve": "cross-env NODE_ENV=production node server",
+    "preview": "yarn build && yarn serve"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.1.8",
-    "animate.css": "^4.1.1",
+    "@kangc/v-md-editor": "^2.3.14",
+    "@vueuse/core": "^8.2.0",
+    "axios": "^0.26.1",
+    "compression": "^1.7.4",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.0",
-    "pinia": "^2.0.12"
+    "express": "^4.17.3",
+    "pinia": "^2.0.12",
+    "serve-static": "^1.15.0",
+    "vue": "^3.2.25",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "@vitejs/plugin-vue": "^2.2.0",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^8.5.0",
+    "prettier": "^2.6.1",
+    "sass": "^1.49.9",
+    "typescript": "^4.5.4",
+    "vite": "^2.8.0",
+    "vue-tsc": "^0.29.8"
   }
 }

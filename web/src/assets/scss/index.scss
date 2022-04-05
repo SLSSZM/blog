@@ -1,0 +1,32 @@
+@import './normalize.scss';
+@import './class.scss';
+@import './font.scss';
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei,
+    Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
+  letter-spacing: 1px;
+}
+
+// 自定义滚动条
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+// 定义滚动条轨道
+::-webkit-scrollbar-track {
+  background-color: var(--bg);
+}
+
+// 定义滑块
+::-webkit-scrollbar-thumb {
+  border-radius: 50px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 1200px) {
+  ::-webkit-scrollbar-track {
+    background-color: var(--bgc);
+  }
+}

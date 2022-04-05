@@ -6,15 +6,23 @@
   import { useRouter } from 'vue-router';
 
   const headers = reactive<any>({ authorization: 'Bearer ' + localStorage.token });
+  const api = import.meta.env.VITE_API + '/admin/upload';
 
   interface Props {
-    image: string;
+    image?: string;
+    height?: string;
+    width?: string;
+    disabled?: boolean;
   }
   const props = withDefaults(defineProps<Props>(), {
     image: '',
+    height: '200px',
+    width: '100%',
+    disabled: false,
   });
   const emits = defineEmits<{
     (e: 'upload', url: string): void;
+    (e: 'delete'): void;
   }>();
   const handleUploadSuccess = (res: any, file: UploadFile) => {
     emits('upload', res.data.url);
@@ -32,6 +40,7 @@
   };
   const handlerDelete = () => {
     emits('upload', '');
+    emits('delete');
   };
   let imageDialog = ref<boolean>(false);
 </script>
@@ -40,11 +49,12 @@
   <div>
     <el-upload
       class="avatar-uploader"
-      action="http://localhost:3001/api/admin/upload"
+      :action="api"
       :headers="headers"
       :show-file-list="false"
       :on-success="handleUploadSuccess"
       :on-error="handlerUploadError"
+      :disabled="disabled"
     >
       <img v-if="props.image" :src="props.image" class="avatar" cover />
       <el-icon v-else class="avatar-uploader-icon"><plus /></el-icon>
@@ -61,9 +71,9 @@
 
 <style scoped lang="scss">
   .avatar-uploader :deep(.el-upload) {
-    width: 100%;
-    height: 300px;
-    min-width: 200px;
+    width: v-bind('props.width');
+    height: v-bind('props.height');
+    min-width: 100px;
     border: 1px dashed #d9d9d9;
     cursor: pointer;
     position: relative;
@@ -72,7 +82,7 @@
     transition: var(--el-transition-duration-fast);
     &:hover {
       .hover-icon {
-        display: block;
+        display: flex;
       }
     }
   }
@@ -82,15 +92,15 @@
   .el-icon.avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 100%;
-    height: 300px;
-    min-width: 200px;
+    width: v-bind('props.width');
+    height: v-bind('props.height');
+    min-width: 100px;
     text-align: center;
   }
   .avatar {
-    width: 100%;
-    height: 300px;
-    min-width: 200px;
+    width: v-bind('props.width');
+    height: v-bind('props.height');
+    min-width: 100px;
     object-fit: cover;
     display: block;
     border-radius: 12px;
@@ -103,18 +113,20 @@
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
+    justify-content: center;
+    align-items: center;
     .preview-icon {
       font-size: 25px;
       color: $color_reverse;
       padding: 5px;
       margin-right: 10px;
+      border-radius: 50%;
+      border: 1px solid transparent;
       &:last-child {
         margin-right: 0;
       }
       &:hover {
-        border-radius: 50%;
-        padding: 5px;
-        border: 1px solid $color_reverse;
+        border-color: $color_reverse;
       }
     }
   }

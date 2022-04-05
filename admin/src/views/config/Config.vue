@@ -17,12 +17,35 @@
 </script>
 
 <template>
-  <el-form class="config" label-width="120px" size="large">
+  <el-form class="config" label-width="150px" size="large">
     <el-form-item label="一言背景图：">
-      <upload-picture :image="config.data.image" @upload="config.data.image = $event" />
+      <upload-picture
+        width="500px"
+        height="200px"
+        :image="config.data.image"
+        @upload="config.data.image = $event"
+      />
     </el-form-item>
-    <el-form-item label="用户默认头像：">
-      <upload-picture :image="config.data.userAvatar" @upload="config.data.userAvatar = $event" />
+    <el-form-item label="我的头像：">
+      <upload-picture
+        height="100px"
+        width="100px"
+        :image="config.data.myAvatar"
+        @upload="config.data.myAvatar = $event"
+      />
+    </el-form-item>
+    <el-form-item label="用户默认头像组：">
+      <upload-picture
+        class="user-avatar"
+        height="100px"
+        width="100px"
+        v-for="(item, index) in config.data.userAvatar"
+        :key="item"
+        :image="item"
+        disabled
+        @delete="config.data.userAvatar = config.data.userAvatar?.splice(index)"
+      />
+      <upload-picture height="100px" width="100px" @upload="config.data.userAvatar?.push($event)" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" auto-insert-space @click="handlerSave">保存</el-button>
@@ -30,4 +53,9 @@
   </el-form>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+  .user-avatar {
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+</style>

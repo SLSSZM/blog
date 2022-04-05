@@ -1,14 +1,15 @@
+const router = require('express').Router();
+const AdminUser = require('../../models/AdminUser.js');
+const Article = require('../../models/Article.js');
+const assert = require('http-assert');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const resource = require('../../middleware/resource');
+const auth = require('../../middleware/auth.js');
+const redis = require('../../plugin/redis');
+const multer = require('multer');
+
 module.exports = app => {
-  const router = require('express').Router();
-  const AdminUser = require('../../models/AdminUser.js');
-  const Article = require('../../models/Article.js');
-  const assert = require('http-assert');
-  const bcrypt = require('bcryptjs');
-  const jwt = require('jsonwebtoken');
-  const resource = require('../../middleware/resource');
-  const auth = require('../../middleware/auth.js');
-  const redis = require('../../plugin/redis');
-  const multer = require('multer');
   require('./config')(app);
 
   router.get('/', async (req, res) => {
@@ -140,7 +141,7 @@ module.exports = app => {
   const upload = multer({ dest: __dirname + '/../../uploads' });
   app.post('/api/admin/upload', auth(app), upload.single('file'), (req, res) => {
     const file = req.file;
-    file.url = 'http://localhost:3001/uploads/' + file.filename;
+    file.url = app.get('fullApi') + '/uploads/' + file.filename;
     res.send({
       code: 200,
       data: file,

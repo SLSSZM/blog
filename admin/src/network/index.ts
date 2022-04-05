@@ -32,7 +32,7 @@ const transform: Transform = {
 };
 
 export const http: HttpRequest = new HttpRequest({
-  baseURL: 'http://localhost:3001/api',
+  baseURL: import.meta.env.VITE_API as string,
   timeout: 12000,
   transform,
   ignoreRepeatRequests: true,

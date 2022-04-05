@@ -7,10 +7,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.set('secret', 'dfhasdhfisf143r42adsfasf789670fd');
+app.set('api', 'http://localhost');
+app.set('post', '3005');
+app.set('fullApi', app.get('api') + ':' + app.get('post'));
 
 require('./plugin/db.js')(app);
 
 require('./routes/admin/index.js')(app);
+require('./routes/web/index.js')(app);
 
 // 错误响应
 app.use(async (err, req, res, next) => {
@@ -24,6 +28,6 @@ app.use(async (err, req, res, next) => {
   });
 });
 
-app.listen(3001, () => {
-  console.log('http://localhost:3001');
+app.listen(3005, () => {
+  console.log(app.get('fullApi'));
 });
