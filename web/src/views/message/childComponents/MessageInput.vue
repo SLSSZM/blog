@@ -1,20 +1,52 @@
 <script setup lang="ts">
   import Chunk from '@/components/chunk/Chunk.vue';
   import SlButton from '@/components/slButton/SlButton.vue';
+  import { createMessage, Message } from '@/network/api';
+  import { onMounted, reactive, ref } from 'vue';
+
+  let message = reactive<Message>({
+    name: '',
+    content: '',
+    mail: '',
+  });
+  let validError = ref<boolean>(false);
+  const emits = defineEmits<{
+    (e: 'success'): void;
+  }>();
+  const handlerSubmit = async (): Promise<void> => {
+    if (!message.name || !message.mail || !message.content) {
+      validError.value = true;
+      return;
+    }
+    await createMessage(message);
+    emits('success');
+    validError.value = false;
+    message.content = '';
+    localStorage.setItem('messageData', JSON.stringify({ name: message.name, mail: message.mail }));
+  };
+  onMounted(() => {
+    const messageData = JSON.parse(localStorage.getItem('messageData') || '{}');
+    message.name = messageData.name;
+    message.mail = messageData.mail;
+  });
 </script>
 
 <template>
   <div class="message-input">
-    <chunk class="input-card" color mini-color>
+    <chunk class="input-card" color mini-color :class="{ 'valid-error': validError }">
       <div class="info">
-        <input type="text" placeholder="名称（必填）" />
-        <input type="text" placeholder="邮箱（必填）" />
+        <input type="text" v-model="message.name" placeholder="名称（必填）" />
+        <input type="text" v-model="message.mail" placeholder="邮箱（必填）" />
       </div>
-      <textarea rows="8" placeholder="不要默默看了，快来评论下！！"></textarea>
+      <textarea
+        rows="8"
+        v-model="message.content"
+        placeholder="不要默默看了，快来评论下！！"
+      ></textarea>
     </chunk>
     <div class="tip">
       <span>如果觉得网址有需要改进的地方或文章有问题，也可在这里进行留言</span>
-      <sl-button type="primary" class="sl-button">提交</sl-button>
+      <sl-button type="primary" class="sl-button" @click="handlerSubmit">提交</sl-button>
     </div>
   </div>
 </template>
@@ -24,6 +56,10 @@
     padding: 10px;
     .input-card {
       margin-bottom: 10px;
+      border: 3px solid transparent;
+      &.valid-error {
+        border: 3px solid var(--danger);
+      }
       .info {
         padding: 5px;
         input {

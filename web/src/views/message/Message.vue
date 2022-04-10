@@ -2,16 +2,25 @@
   import MessageCard from './childComponents/MessageCard.vue';
   import MessageInput from './childComponents/MessageInput.vue';
   import Chunk from '@/components/chunk/Chunk.vue';
+  import { onMounted, reactive } from 'vue';
+  import { fetchMessage, Message } from '@/network/api';
+
+  let List = reactive<{ data: Message[] }>({ data: [] });
+
+  const fetchList = async (): Promise<void> => {
+    const res = await fetchMessage();
+    List.data = res.data;
+  };
+  onMounted(() => {
+    fetchList();
+  });
 </script>
 
 <template>
   <div class="message">
-    <message-input />
+    <message-input @success="fetchList" />
     <chunk color class="message-list">
-      <message-card class="message-card" />
-      <message-card class="message-card" />
-      <message-card class="message-card" />
-      <message-card class="message-card" />
+      <message-card class="message-card" v-for="item in List.data" :key="item._id" :value="item" />
     </chunk>
   </div>
 </template>

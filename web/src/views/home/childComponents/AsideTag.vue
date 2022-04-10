@@ -2,19 +2,28 @@
   import Chunk from '@/components/chunk/Chunk.vue';
   import SlTag from '@/components/slTag/SlTag.vue';
   import { Tag } from '@/network/api';
+  import { useRouter } from 'vue-router';
   interface Props {
     list?: Tag[];
   }
   const props = withDefaults(defineProps<Props>(), {
     list: () => [],
   });
+  const router = useRouter();
 </script>
 <template>
   <chunk class="aside-tag" color>
     <div class="title">文章标签</div>
     <div class="tip">点击标签搜索文章</div>
     <div class="list">
-      <sl-tag v-for="item in props.list" :key="item._id" plain>{{ item.name }}</sl-tag>
+      <sl-tag
+        v-for="item in props.list"
+        :key="item._id"
+        plain
+        hover-color
+        @click="router.push({ name: 'Article', params: { tag: item.name } })"
+        >{{ item.name }}</sl-tag
+      >
     </div>
   </chunk>
 </template>

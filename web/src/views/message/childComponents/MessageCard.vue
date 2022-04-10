@@ -1,20 +1,16 @@
 <script setup lang="ts">
   import Chunk from '@/components/chunk/Chunk.vue';
   import SlButton from '@/components/slButton/SlButton.vue';
+  import { Message } from '@/network/api';
+  import dayjs from 'dayjs';
   interface Props {
-    value?: {
-      name: string;
-      avatar: string;
-      message: string;
-      time: string;
-    };
+    value?: Message;
   }
   const props = withDefaults(defineProps<Props>(), {
     value: () => ({
       name: '',
-      avatar: '',
-      message: '',
-      time: '',
+      content: '',
+      createdAt: '',
     }),
   });
 </script>
@@ -24,12 +20,12 @@
     <div class="header">
       <img src="@/assets/logo.png" />
       <div class="info">
-        <div class="name">山岚设色</div>
-        <div class="time">2022-01-03 20:56</div>
+        <div class="name">{{ props.value.name }}</div>
+        <div class="time">{{ dayjs(props.value.createdAt).format('YYYY-MM-DD HH:mm:ss') }}</div>
       </div>
     </div>
     <div class="content">
-      <div class="message">留言测试留言测试留言测试</div>
+      <div class="message">{{ props.value.content }}</div>
       <!-- <div class="comment-button">
         <sl-button icon="&#xe618;">评论</sl-button>
       </div> -->

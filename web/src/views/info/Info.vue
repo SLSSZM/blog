@@ -11,8 +11,16 @@
   const article = reactive<{ data: Article }>({ data: {} });
   onMounted(async (): Promise<void> => {
     const id = route.query.id as string;
-    const res = await fetchArticleOne(id);
-    article.data = res.data;
+    const views: string[] = JSON.parse(sessionStorage.getItem('views') || '[]');
+
+    if (views.indexOf(id) === -1) {
+      const res = await fetchArticleOne(id, { addView: true });
+      article.data = res.data;
+      sessionStorage.setItem('views', JSON.stringify([...views, id]));
+    } else {
+      const res = await fetchArticleOne(id);
+      article.data = res.data;
+    }
   });
 </script>
 <template>

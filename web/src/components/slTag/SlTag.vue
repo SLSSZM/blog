@@ -6,18 +6,25 @@
     plain?: boolean;
     mini?: boolean;
     active?: boolean;
+    hoverColor?: boolean;
   }
   const props = withDefaults(defineProps<Props>(), {
     plain: false,
     mini: false,
     active: false,
+    hoverColor: false,
   });
 </script>
 
 <template>
   <span
     class="sl-tag hover"
-    :class="{ plain: props.plain, mini: props.mini, active: props.active && props.plain }"
+    :class="{
+      plain: props.plain,
+      mini: props.mini,
+      active: props.active && props.plain,
+      hoverColor: props.hoverColor,
+    }"
   >
     <slot />
   </span>
@@ -41,8 +48,11 @@
       color: var(--danger);
       background-color: var(--danger_plain);
       &:hover {
-        background-color: var(--danger);
-        color: #fff !important;
+        color: var(--danger) !important;
+        &.hoverColor {
+          background-color: var(--danger);
+          color: #fff !important;
+        }
       }
     }
     &.mini {
@@ -52,6 +62,9 @@
     &.active {
       background-color: var(--danger);
       color: #fff !important;
+      &:hover {
+        color: #fff !important;
+      }
     }
   }
 </style>

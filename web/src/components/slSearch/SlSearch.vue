@@ -4,12 +4,20 @@
   interface Props {
     height?: string;
     iconSize?: string;
+    text?: string;
   }
   const props = withDefaults(defineProps<Props>(), {
     height: '40px',
     iconSize: '24px',
+    text: '',
   });
   let text = ref<string>('');
+  watch(
+    (): string => props.text,
+    (value: string): void => {
+      text.value = value;
+    }
+  );
   const emits = defineEmits<{
     (e: 'search', value: string): void;
   }>();

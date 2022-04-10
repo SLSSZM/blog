@@ -8,7 +8,12 @@ const Tag = require('../../models/Tag.js');
 
 module.exports = app => {
   router.get('/config', async (req, res) => {
-    const configs = await Config.findOne({ userId: req.user._id });
+    let configs = {};
+    if (req.query.addView) {
+      configs = await Config.findOneAndUpdate({ userId: req.user._id }, { $inc: { views: 1 } });
+    } else {
+      configs = await Config.findOne({ userId: req.user._id });
+    }
     const articles = await Article.find({ userId: req.user._id, submit: true })
       .populate('tag')
       .sort({ createdAt: -1 })
@@ -54,18 +59,21 @@ module.exports = app => {
   });
   router.get('/article/:id', async (req, res) => {
     assert(req.params.id, 400, 'id不能为空');
-    const model = await Article.findById(
-      req.params.id,
-      { submit: false },
-      { submit: true }
-    ).populate('tag');
+    let model = {};
+    if (req.query.addView) {
+      model = await Article.findByIdAndUpdate({ _id: req.params.id }, { $inc: { views: 1 } })
+        .select('-submit')
+        .populate('tag');
+    } else {
+      model = await Article.findById(req.params.id).select('-submit').populate('tag');
+    }
     res.send({
       code: 200,
       data: model,
     });
   });
   router.get('/message', async (req, res) => {
-    const model = await Message.find({ userId: req.user._id });
+    const model = await Message.find({ userId: req.user._id }).sort({ createdAt: -1 });
     res.send({
       code: 200,
       data: model,

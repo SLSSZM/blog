@@ -17,12 +17,16 @@
       from_who: '',
     },
   });
+  let timer: any = undefined;
   const changeSentence = async (): Promise<void> => {
     try {
       const res = await fetchSentence();
       sentence.data = res;
     } catch (err) {
-      changeSentence();
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        changeSentence();
+      }, 1000);
     }
   };
   onMounted(async (): Promise<void> => {
@@ -38,8 +42,8 @@
     </chunk-title>
     <chunk color class="chunk-card mock">
       <div class="content">{{ sentence.data.hitokoto }}</div>
-      <div class="title">- 标题： {{ sentence.data.from }}</div>
-      <div class="author">- 作者： {{ sentence.data.from_who }}</div>
+      <div class="title" v-if="sentence.data.from">- 标题： {{ sentence.data.from }}</div>
+      <div class="author" v-if="sentence.data.from_who">- 作者： {{ sentence.data.from_who }}</div>
     </chunk>
   </chunk>
 </template>

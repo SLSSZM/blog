@@ -16,16 +16,24 @@ export interface Article {
   body?: string;
 }
 
-export async function fetchConfigApi(): Promise<ResponseResult> {
-  return await http.get<ResponseResult>('/config');
+export interface Message {
+  _id?: string;
+  content?: string;
+  mail?: string;
+  name?: string;
+  createdAt?: string;
+}
+
+export async function fetchConfigApi(params?: any): Promise<ResponseResult> {
+  return await http.get<ResponseResult>('/config', { params: params || {} });
 }
 
 export async function fetchArticle(query?: Article): Promise<ResponseResult<Article[]>> {
   return await http.get<ResponseResult<Article[]>>('/article', { params: query });
 }
 
-export async function fetchArticleOne(id: string): Promise<ResponseResult<Article>> {
-  return await http.get<ResponseResult<Article>>('/article/' + id);
+export async function fetchArticleOne(id: string, params?: any): Promise<ResponseResult<Article>> {
+  return await http.get<ResponseResult<Article>>('/article/' + id, { params: params || {} });
 }
 
 export async function fetchSentence(): Promise<any> {
@@ -33,4 +41,12 @@ export async function fetchSentence(): Promise<any> {
     baseURL: '',
     params: { c: 'i' },
   });
+}
+
+export async function fetchMessage(): Promise<ResponseResult<Message[]>> {
+  return await http.get<ResponseResult<Message[]>>('/message');
+}
+
+export async function createMessage(message: Message): Promise<ResponseResult<Message>> {
+  return await http.post<ResponseResult<Message>>('/message', message);
 }

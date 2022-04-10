@@ -6,13 +6,23 @@
   import AsideTag from './childComponents/AsideTag.vue';
   import { fetchConfigApi } from '@/network/api';
   import { onMounted, reactive } from 'vue';
+  import { useRouter } from 'vue-router';
 
   let configData = reactive<{ data: any }>({ data: {} });
   onMounted(async (): Promise<void> => {
-    const res = await fetchConfigApi();
-    configData.data = res.data;
-    localStorage.setItem('CONFIG', JSON.stringify(res.data));
+    const seeWeb = sessionStorage.getItem('seeWeb');
+    if (!seeWeb) {
+      const res = await fetchConfigApi({ addView: true });
+      configData.data = res.data;
+      localStorage.setItem('CONFIG', JSON.stringify(res.data));
+      sessionStorage.setItem('seeWeb', 'true');
+    } else {
+      const res = await fetchConfigApi();
+      configData.data = res.data;
+      localStorage.setItem('CONFIG', JSON.stringify(res.data));
+    }
   });
+  const router = useRouter();
 </script>
 
 <template>
@@ -20,7 +30,7 @@
     <sentence class="sentence" />
     <chunk-title>
       <template #title>最新文章</template>
-      <sl-search />
+      <sl-search @search="router.push({ name: 'Article', params: { title: $event } })" />
     </chunk-title>
     <div class="home-body">
       <div class="home-content">
@@ -30,6 +40,9 @@
           :key="item._id"
           :value="item"
         />
+        <div class="show-all-article" @click="router.push({ name: 'Article' })">
+          点击查看更多文章
+        </div>
       </div>
       <div class="home-aside">
         <aside-tag :list="configData.data.tags" />
@@ -50,6 +63,15 @@
         width: 65%;
         .article-card {
           margin-bottom: 30px;
+        }
+        .show-all-article {
+          padding: 12px;
+          margin: 30px 0;
+          text-align: center;
+          color: var(--fct);
+          cursor: pointer;
+          border-radius: var(--br);
+          background-color: var(--hover);
         }
       }
       .home-aside {
