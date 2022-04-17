@@ -22,10 +22,12 @@
   });
   const emits = defineEmits<{
     (e: 'upload', url: string): void;
+    (e: 'update:image', url: string): void;
     (e: 'delete'): void;
   }>();
   const handleUploadSuccess = (res: any, file: UploadFile) => {
     emits('upload', res.data.url);
+    emits('update:image', res.data.url);
     // 刷新token
     if (res.token) {
       localStorage.setItem('token', res.token);

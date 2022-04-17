@@ -3,7 +3,7 @@
   import ChunkTitle from '@/components/chunk/ChunkTitle.vue';
   import SlButton from '@/components/slButton/SlButton.vue';
   import { fetchSentence } from '@/network/api';
-  import { onMounted, reactive } from 'vue';
+  import { onMounted, reactive, ref } from 'vue';
 
   interface SenTence {
     from: string;
@@ -29,8 +29,10 @@
       }, 1000);
     }
   };
+  let image = ref<string>('');
   onMounted(async (): Promise<void> => {
     changeSentence();
+    image.value = JSON.parse(localStorage.getItem('CONFIG') || '{}')?.configs.image;
   });
 </script>
 
@@ -40,7 +42,7 @@
       <template #title>诗词一言</template>
       <sl-button icon="&#xe626;" round @click="changeSentence">切换一言</sl-button>
     </chunk-title>
-    <chunk color class="chunk-card mock">
+    <chunk color class="chunk-card mock" :style="{ 'background-image': `url(${image})` }">
       <div class="content">{{ sentence.data.hitokoto }}</div>
       <div class="title" v-if="sentence.data.from">- 标题： {{ sentence.data.from }}</div>
       <div class="author" v-if="sentence.data.from_who">- 作者： {{ sentence.data.from_who }}</div>
@@ -58,7 +60,7 @@
     justify-content: flex-end;
 
     color: #fff;
-    background-image: url(@/assets/images/sentence.jpg);
+
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;

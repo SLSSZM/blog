@@ -3,6 +3,7 @@
   import SlButton from '@/components/slButton/SlButton.vue';
   import { Message } from '@/network/api';
   import dayjs from 'dayjs';
+  import { randomAvatar } from '@/utils/config';
   interface Props {
     value?: Message;
   }
@@ -18,7 +19,7 @@
 <template>
   <chunk class="message-card">
     <div class="header">
-      <img src="@/assets/logo.png" />
+      <img :src="randomAvatar()" />
       <div class="info">
         <div class="name">{{ props.value.name }}</div>
         <div class="time">{{ dayjs(props.value.createdAt).format('YYYY-MM-DD HH:mm:ss') }}</div>

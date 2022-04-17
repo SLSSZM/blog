@@ -97,9 +97,11 @@
   let text = ref<string>(props.value);
   const emit = defineEmits<{
     (e: 'change', value: string): void;
+    (e: 'update:value', value: string): void;
   }>();
   watch(text, (value: string): void => {
     emit('change', value);
+    emit('update:value', value);
   });
 </script>
 

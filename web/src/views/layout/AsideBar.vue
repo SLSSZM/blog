@@ -1,10 +1,9 @@
 <script setup lang="ts">
   import { useThemeStore, ThemeType } from '@/store/theme';
-  import { ref, watch } from 'vue';
+  import { onMounted, reactive, ref, watch } from 'vue';
   import Iconfont from '@/components/common/iconfont/Iconfont.vue';
   import SlButton from '@/components/slButton/SlButton.vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { emit } from 'process';
 
   const themeStore = useThemeStore();
   let width = ref<string>('300px');
@@ -36,6 +35,10 @@
     router.push(path);
     emits('close');
   };
+  let avatar = ref<string>('');
+  onMounted(() => {
+    avatar.value = JSON.parse(localStorage.getItem('CONFIG') || '{}').configs.myAvatar;
+  });
 </script>
 
 <template>
@@ -56,7 +59,7 @@
       <iconfont class="fct hover icon" icon="&#xe645;" />
     </div>
     <div class="avatar flex-c">
-      <!-- <img src="@/assets/logo.png" alt="" /> -->
+      <img :src="avatar" alt="" />
     </div>
     <h1 class="flex-c" @click="dumpPage('/')">
       <span class="text hover fct"> <span class="letter">山岚设</span>色 </span>

@@ -8,6 +8,7 @@ const resource = require('../../middleware/resource');
 const auth = require('../../middleware/auth.js');
 const redis = require('../../plugin/redis');
 const multer = require('multer');
+const Config = require('../../models/Config.js');
 
 module.exports = app => {
   require('./config')(app);
@@ -128,7 +129,7 @@ module.exports = app => {
   });
   // 访问量
   app.get('/api/admin/workbench', auth(app), async (req, res) => {
-    const userViews = req.user.views;
+    const userViews = (await Config.findOne({ userId: req.user._id })).views;
     const articleTotal = await Article.find({ userId: req.user._id }).count();
     const hotArticles = await Article.find({ userId: req.user._id }).sort({ views: -1 }).limit(3);
     res.send({

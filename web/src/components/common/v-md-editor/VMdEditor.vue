@@ -13,8 +13,6 @@
   // code copy
   import createCopyCodePlugin from '@kangc/v-md-editor/lib/plugins/copy-code/index';
   import '@kangc/v-md-editor/lib/plugins/copy-code/copy-code.css';
-  // code line
-  import createLineNumbertPlugin from '@kangc/v-md-editor/lib/plugins/line-number/index';
   // code hight
   import createHighlightLinesPlugin from '@kangc/v-md-editor/lib/plugins/highlight-lines/index';
   import '@kangc/v-md-editor/lib/plugins/highlight-lines/highlight-lines.css';
@@ -35,7 +33,6 @@
     },
   });
   VMdPreview.use(createCopyCodePlugin());
-  VMdPreview.use(createLineNumbertPlugin());
   VMdPreview.use(createHighlightLinesPlugin());
   VMdPreview.use(createTodoListPlugin());
   VMdPreview.use(createAlignPlugin());

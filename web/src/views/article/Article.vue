@@ -12,12 +12,20 @@
   let articleList = reactive<{ data: Article[] }>({ data: [] });
   let selectTagList = reactive<{ data: string[] }>({ data: [] });
   let selectTitle = ref<string>('');
+  let page = ref<number>(1);
+  let count = ref<number>(10);
+  let showAddArticleButton = ref<boolean>(true);
   const fetchData = async (): Promise<void> => {
     const res = await fetchArticle({
       title: selectTitle.value,
       tag: JSON.stringify(selectTagList.data) as unknown as Tag[],
+      page: page.value,
+      count: count.value,
     });
-    articleList.data = res.data;
+    Array.prototype.push.apply(articleList.data, res.data);
+    if (res.data.length < count.value) {
+      showAddArticleButton.value = false;
+    }
   };
   const route = useRoute();
   onMounted((): void => {
@@ -43,6 +51,10 @@
   const handlerSearch = (title: string): void => {
     selectTitle.value = title;
     fetchData();
+  };
+  const handlerAddArticleButton = async (): Promise<void> => {
+    page.value++;
+    await fetchData();
   };
 </script>
 <template>
@@ -80,7 +92,14 @@
         :value="item"
       />
     </chunk>
-    <div v-else class="notArticle">暂无文章</div>
+    <div
+      class="show-all-article"
+      v-if="articleList.data.length && showAddArticleButton"
+      @click="handlerAddArticleButton"
+    >
+      点击加载更多文章
+    </div>
+    <div v-else class="notArticle">暂无更多文章~</div>
   </chunk>
 </template>
 
@@ -122,7 +141,17 @@
       }
     }
   }
+  .show-all-article {
+    padding: 12px;
+    margin: 30px 0;
+    text-align: center;
+    color: var(--fct);
+    cursor: pointer;
+    border-radius: var(--br);
+    background-color: var(--hover);
+  }
   .notArticle {
+    margin: 30px 0;
     text-align: center;
   }
   @media screen and (max-width: 1200px) {

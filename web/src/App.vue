@@ -52,7 +52,7 @@
     <div class="container">
       <router-view></router-view>
     </div>
-    <div class="backTop" v-show="currentScrollDistance > 200" @click="handlerBackTop"></div>
+    <div class="back-top" v-show="currentScrollDistance > 200" @click="handlerBackTop"></div>
   </div>
 </template>
 
@@ -87,16 +87,20 @@
       overflow: hidden;
       z-index: 9;
     }
-    .backTop {
+    .back-top {
       height: 50px;
       width: 50px;
       position: fixed;
       cursor: pointer;
       right: 5%;
       bottom: 5%;
+      opacity: 0.5;
       background-image: url('@/assets/images/backTop.svg');
       background-position: center;
       background-size: cover;
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
   @media screen and (max-width: 1200px) {

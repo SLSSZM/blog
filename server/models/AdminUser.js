@@ -10,7 +10,6 @@ const schema = new mongoose.Schema({
       return bcrypt.hashSync(value, bcrypt.genSaltSync(10));
     },
   },
-  views: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model('AdminUser', schema);

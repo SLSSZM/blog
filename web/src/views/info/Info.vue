@@ -31,7 +31,7 @@
     </div>
     <chunk class="info" color>
       <div class="image" v-if="article.data.image">
-        <img src="@/assets/images/sentence.jpg" />
+        <img :src="article.data.image" />
       </div>
       <div class="text">
         <h1>{{ article.data.title }}</h1>

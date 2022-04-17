@@ -19,16 +19,21 @@ export interface Article {
 export interface Message {
   _id?: string;
   content?: string;
-  mail?: string;
+  email?: string;
   name?: string;
   createdAt?: string;
+}
+
+interface ArticleQuery extends Article {
+  page?: number;
+  count?: number;
 }
 
 export async function fetchConfigApi(params?: any): Promise<ResponseResult> {
   return await http.get<ResponseResult>('/config', { params: params || {} });
 }
 
-export async function fetchArticle(query?: Article): Promise<ResponseResult<Article[]>> {
+export async function fetchArticle(query?: ArticleQuery): Promise<ResponseResult<Article[]>> {
   return await http.get<ResponseResult<Article[]>>('/article', { params: query });
 }
 

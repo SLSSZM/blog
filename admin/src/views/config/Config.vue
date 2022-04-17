@@ -3,6 +3,7 @@
   import { reactive } from 'vue';
   import { Config, fetchConfigApi, updateConfigApi } from '@/network/api/config';
   import { ElMessage } from 'element-plus';
+  import Markdown from '@/components/markdown/Markdown.vue';
 
   let config = reactive<{ data: Config }>({ data: {} });
   const created = async (): Promise<void> => {
@@ -19,20 +20,10 @@
 <template>
   <el-form class="config" label-width="150px" size="large">
     <el-form-item label="一言背景图：">
-      <upload-picture
-        width="500px"
-        height="200px"
-        :image="config.data.image"
-        @upload="config.data.image = $event"
-      />
+      <upload-picture width="500px" height="200px" v-model:image="config.data.image" />
     </el-form-item>
     <el-form-item label="我的头像：">
-      <upload-picture
-        height="100px"
-        width="100px"
-        :image="config.data.myAvatar"
-        @upload="config.data.myAvatar = $event"
-      />
+      <upload-picture height="100px" width="100px" v-model:image="config.data.myAvatar" />
     </el-form-item>
     <el-form-item label="用户默认头像组：">
       <upload-picture
@@ -46,6 +37,9 @@
         @delete="config.data.userAvatar = config.data.userAvatar?.splice(index)"
       />
       <upload-picture height="100px" width="100px" @upload="config.data.userAvatar?.push($event)" />
+    </el-form-item>
+    <el-form-item label="关于我：">
+      <markdown v-model="config.data.description" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" auto-insert-space @click="handlerSave">保存</el-button>

@@ -7,14 +7,14 @@
   let message = reactive<Message>({
     name: '',
     content: '',
-    mail: '',
+    email: '',
   });
   let validError = ref<boolean>(false);
   const emits = defineEmits<{
     (e: 'success'): void;
   }>();
   const handlerSubmit = async (): Promise<void> => {
-    if (!message.name || !message.mail || !message.content) {
+    if (!message.name || !message.email || !message.content) {
       validError.value = true;
       return;
     }
@@ -22,12 +22,15 @@
     emits('success');
     validError.value = false;
     message.content = '';
-    localStorage.setItem('messageData', JSON.stringify({ name: message.name, mail: message.mail }));
+    localStorage.setItem(
+      'messageData',
+      JSON.stringify({ name: message.name, email: message.email })
+    );
   };
   onMounted(() => {
     const messageData = JSON.parse(localStorage.getItem('messageData') || '{}');
     message.name = messageData.name;
-    message.mail = messageData.mail;
+    message.email = messageData.email;
   });
 </script>
 
@@ -36,7 +39,7 @@
     <chunk class="input-card" color mini-color :class="{ 'valid-error': validError }">
       <div class="info">
         <input type="text" v-model="message.name" placeholder="名称（必填）" />
-        <input type="text" v-model="message.mail" placeholder="邮箱（必填）" />
+        <input type="text" v-model="message.email" placeholder="邮箱（必填）" />
       </div>
       <textarea
         rows="8"

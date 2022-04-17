@@ -6,6 +6,8 @@ const schema = new mongoose.Schema(
     image: { type: String, default: '' },
     myAvatar: { type: String, default: '' },
     userAvatar: [{ type: String }],
+    views: { type: Number, default: 0 },
+    description: { type: String },
   },
   {
     timestamps: true,

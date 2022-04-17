@@ -2,9 +2,11 @@ import { http } from '..';
 import { ResponseResult } from '../axios.inteface';
 
 export interface Config {
+  _id?: string;
   image?: string;
   myAvatar?: string;
   userAvatar?: string[];
+  description?: string;
 }
 
 export async function fetchConfigApi(): Promise<ResponseResult<Config>> {

@@ -30,6 +30,8 @@ module.exports = app => {
       query.tag = JSON.parse(query.tag);
     }
     query.title = new RegExp(query.title, 'ig');
+    query.page = +(query.page || 1);
+    query.count = +(query.count || 10);
     const model = await Article.aggregate([
       {
         $match: { userId: req.user._id, title: query.title },
@@ -46,10 +48,10 @@ module.exports = app => {
         $match: query.tag && query.tag.length ? { 'tag.name': { $in: query.tag } } : {},
       },
       {
-        $skip: req.query.page || 0,
+        $skip: query.count * (query.page - 1),
       },
       {
-        $limit: req.query.count || 10,
+        $limit: query.count,
       },
     ]);
     res.send({
@@ -73,7 +75,9 @@ module.exports = app => {
     });
   });
   router.get('/message', async (req, res) => {
-    const model = await Message.find({ userId: req.user._id }).sort({ createdAt: -1 });
+    const model = await Message.find({ userId: req.user._id })
+      .select('-email')
+      .sort({ createdAt: -1 });
     res.send({
       code: 200,
       data: model,
