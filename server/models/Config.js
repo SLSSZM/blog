@@ -8,6 +8,7 @@ const schema = new mongoose.Schema(
     userAvatar: [{ type: String }],
     views: { type: Number, default: 0 },
     description: { type: String },
+    githubPath: { type: String, default: '' },
   },
   {
     timestamps: true,

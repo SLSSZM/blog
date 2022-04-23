@@ -91,6 +91,7 @@
       height: 50px;
       width: 50px;
       position: fixed;
+      border-radius: 50%;
       cursor: pointer;
       right: 5%;
       bottom: 5%;
@@ -98,6 +99,7 @@
       background-image: url('@/assets/images/backTop.svg');
       background-position: center;
       background-size: cover;
+      background-color: var(--bgc);
       &:hover {
         opacity: 0.8;
       }

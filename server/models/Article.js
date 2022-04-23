@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Type } = require('../common/enum');
+const { ArticleType } = require('../common/enum');
 
 const schema = new mongoose.Schema(
   {
@@ -10,7 +10,7 @@ const schema = new mongoose.Schema(
     body: { type: String },
     submit: { type: Boolean },
     image: { type: String },
-    type: { type: String, enum: Type },
+    type: { type: String, enum: ArticleType },
     views: { type: Number, default: 0 },
     comment: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Comment' }],
   },

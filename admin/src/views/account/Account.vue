@@ -1,21 +1,26 @@
 <script setup lang="ts">
-  import { fetchMessageApi, Message, deleteMessageApi } from '@/network/api/message';
+  import { fetchAccountApi, Account, deleteAccountApi } from '@/network/api/account';
   import { Delete } from '@element-plus/icons-vue';
   import { ElMessage } from 'element-plus';
-  import { inject, Ref, ref } from 'vue';
+  import { inject, reactive, Ref, ref } from 'vue';
   import dayjs from 'dayjs';
+  import AccountForm from './childComponents/AccountForm.vue';
 
-  let tableData = ref<Message[]>([]);
+  let tableData = ref<Account[]>([]);
   let loading = ref<boolean>(false);
   let page = ref<number>(1);
   let count = ref<number>(8);
   let total = ref<number>(50);
-  let email = ref<string>('');
+  let username = ref<string>('');
 
   const fetchList = async (): Promise<void> => {
     loading.value = true;
-    const res = await fetchMessageApi({ email: email.value, page: page.value, count: count.value });
-    tableData.value = res.data.list;
+    const res = await fetchAccountApi({
+      username: username.value,
+      page: page.value,
+      count: count.value,
+    });
+    tableData.value = res.data.list || [];
     total.value = res.data.total;
     loading.value = false;
   };
@@ -28,7 +33,7 @@
   const clientLevel = inject<Ref<number>>('clientLevel', ref<number>(1));
 
   const handlerDelete = async (id: string): Promise<void> => {
-    await deleteMessageApi(id);
+    await deleteAccountApi(id);
     ElMessage.success('删除成功');
     fetchList();
   };
@@ -41,28 +46,45 @@
       handlerQuery();
     }
   };
+  let dialogVisible = ref<boolean>(false);
+  let formData = reactive<{ data: Account }>({ data: {} });
+  const handlerCreate = (row?: Account): void => {
+    if (row?._id) {
+      formData.data = row;
+    }
+    dialogVisible.value = true;
+  };
+  const handlerSuccess = (): void => {
+    fetchList();
+    dialogVisible.value = false;
+  };
 </script>
 
 <template>
   <div class="message">
     <div class="query">
       <el-input
-        v-model="email"
+        v-model="username"
         @keydown="keydown"
-        placeholder="按邮箱搜索"
+        placeholder="用户名搜索"
         clearable
         style="max-width: 300px"
       />
       <el-button type="primary" @click="handlerQuery">搜索</el-button>
+      <el-button type="success" @click="handlerCreate()">创建账户</el-button>
     </div>
     <el-table :data="tableData" v-loading="loading">
       <el-table-column type="index" fixed />
-      <el-table-column label="名称" prop="name" />
-      <el-table-column label="邮箱" prop="email" min-width="180px" />
-      <el-table-column label="内容" prop="content" min-width="180px" />
+      <el-table-column label="用户名" prop="username" />
+      <el-table-column label="权限" prop="role" />
       <el-table-column label="创建时间" prop="createdAt" min-width="180px">
         <template #default="{ row }">
           {{ dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
+      <el-table-column label="修改">
+        <template #default="{ row }">
+          <el-button type="text" @click="handlerCreate(row)">修改信息</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -88,6 +110,19 @@
       @current-change="currentChange"
     />
   </div>
+  <el-dialog
+    destroy-on-close
+    title="账户"
+    v-model="dialogVisible"
+    width="300px"
+    :fullscreen="clientLevel === 3"
+  >
+    <account-form
+      :form-data="formData.data"
+      @cancel="dialogVisible = false"
+      @success="handlerSuccess"
+    />
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">

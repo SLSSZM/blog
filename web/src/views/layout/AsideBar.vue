@@ -36,9 +36,15 @@
     emits('close');
   };
   let avatar = ref<string>('');
+  let githubPath = ref<string>('');
   onMounted(() => {
-    avatar.value = JSON.parse(localStorage.getItem('CONFIG') || '{}').configs.myAvatar;
+    const configs = JSON.parse(localStorage.getItem('CONFIG') || '{}')?.configs;
+    avatar.value = configs?.myAvatar || '';
+    githubPath.value = configs?.githubPath || '';
   });
+  const dumpGithub = (): void => {
+    window.open(githubPath.value);
+  };
 </script>
 
 <template>
@@ -56,7 +62,7 @@
         v-else
         @click="themeStore.changeTheme(ThemeType.Light)"
       />
-      <iconfont class="fct hover icon" icon="&#xe645;" />
+      <iconfont class="fct hover icon github-icon" icon="&#xe645;" @click="dumpGithub" />
     </div>
     <div class="avatar flex-c">
       <img :src="avatar" alt="" />

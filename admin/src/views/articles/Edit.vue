@@ -95,9 +95,9 @@
       <el-form-item prop="image" label="图片" style="width: 100%">
         <upload-picture v-model:image="article.data.image" style="width: 100%" />
       </el-form-item>
-      <el-from-item style="width: 100%; margin-bottom: 20px">
+      <el-form-item style="width: 100%; margin-bottom: 20px">
         <markdown v-model="article.data.body" />
-      </el-from-item>
+      </el-form-item>
       <el-form-item>
         <div class="btn">
           <el-button plain type="info" @click="handlerSave(false)">

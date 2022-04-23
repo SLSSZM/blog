@@ -7,12 +7,13 @@ export interface Config {
   myAvatar?: string;
   userAvatar?: string[];
   description?: string;
+  githubPath?: string;
 }
 
 export async function fetchConfigApi(): Promise<ResponseResult<Config>> {
-  return await http.get<ResponseResult<Config>>('/admin/config');
+  return await http.get<ResponseResult<Config>>('/config');
 }
 
 export async function updateConfigApi(config: Config): Promise<ResponseResult<Config>> {
-  return await http.put<ResponseResult<Config>>('/admin/config', config);
+  return await http.put<ResponseResult<Config>>('/config', config);
 }

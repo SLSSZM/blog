@@ -46,6 +46,7 @@
   import createTodoListPlugin from '@kangc/v-md-editor/lib/plugins/todo-list/index';
   import '@kangc/v-md-editor/lib/plugins/todo-list/todo-list.css';
   import createAlignPlugin from '@kangc/v-md-editor/lib/plugins/align';
+  import { uploadApi } from '@/network/api/base';
 
   VMdEditor.Codemirror = Codemirror;
   VMdEditor.use(vuepressTheme, {
@@ -66,22 +67,21 @@
   VMdEditor.use(createAlignPlugin());
 
   // 处理图片上传，base64
-  const handleUploadImage = (event: any, insertImage: any, files: any): void => {
-    let reader = new FileReader();
-    reader.readAsDataURL(files[0]);
+  const handleUploadImage = async (event: any, insertImage: any, files: File[]): Promise<void> => {
+    let formData = new FormData();
+    formData.append('file', files[0]);
+    const res = await uploadApi(formData);
 
-    reader.onload = function () {
-      insertImage({
-        url: this.result,
-        desc: files[0].name,
-        width: 'auto',
-        height: 'auto',
-      });
-    };
+    insertImage({
+      url: res.data.url,
+      desc: files[0].name,
+      width: 'auto',
+      height: 'auto',
+    });
   };
 
   interface Props {
-    value: string;
+    value?: string;
     height?: string;
     leftToolBar?: string;
     includeLevel?: number[];

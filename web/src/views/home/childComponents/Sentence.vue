@@ -32,7 +32,7 @@
   let image = ref<string>('');
   onMounted(async (): Promise<void> => {
     changeSentence();
-    image.value = JSON.parse(localStorage.getItem('CONFIG') || '{}')?.configs.image;
+    image.value = JSON.parse(localStorage.getItem('CONFIG') || '{}')?.configs?.image || '';
   });
 </script>
 

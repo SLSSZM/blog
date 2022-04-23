@@ -12,6 +12,7 @@ const Config = require('../../models/Config.js');
 
 module.exports = app => {
   require('./config')(app);
+  require('./account')(app);
 
   router.get('/', async (req, res) => {
     let query = req.query || {};
@@ -107,6 +108,7 @@ module.exports = app => {
       .exec();
     res.send({
       code: 200,
+      data: { username: user.username, role: user.role },
       token,
     });
   });
@@ -129,7 +131,7 @@ module.exports = app => {
   });
   // 访问量
   app.get('/api/admin/workbench', auth(app), async (req, res) => {
-    const userViews = (await Config.findOne({ userId: req.user._id })).views;
+    const userViews = (await Config.findOne({ userId: req.user._id }))?.views;
     const articleTotal = await Article.find({ userId: req.user._id }).count();
     const hotArticles = await Article.find({ userId: req.user._id }).sort({ views: -1 }).limit(3);
     res.send({

@@ -8,7 +8,9 @@
     PriceTag,
     Message,
     Setting,
+    User,
   } from '@element-plus/icons-vue';
+  import { reactive } from 'vue';
   import { useRoute } from 'vue-router';
   const route = useRoute();
 
@@ -19,6 +21,7 @@
   const handlerSelect = (): void => {
     emit('closeMenu');
   };
+  const Info = reactive(JSON.parse(localStorage.getItem('INFO') || '{}'));
 </script>
 
 <template>
@@ -36,6 +39,10 @@
     <el-menu-item index="/config">
       <el-icon><setting /></el-icon>
       <span>页面设置</span>
+    </el-menu-item>
+    <el-menu-item index="/account" v-if="Info && Info.role === 'root'">
+      <el-icon><user /></el-icon>
+      <span>账户管理</span>
     </el-menu-item>
     <el-sub-menu index="/post">
       <template #title>

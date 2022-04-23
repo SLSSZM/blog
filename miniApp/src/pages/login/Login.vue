@@ -1,24 +1,44 @@
 <template>
   <view class="login">
     <view class="h1"><text>山岚设</text>色</view>
-    <form @submit="handlerSubmit" class="form">
+    <view class="form">
       <view class="form-item">
-        <input placeholder="请输入账号" />
+        <input placeholder="请输入账号" v-model="form.username" />
       </view>
       <view class="form-item">
-        <input placeholder="请输入密码" />
+        <input placeholder="请输入密码" v-model="form.password" type="password" />
       </view>
       <view class="form-item button-group">
-        <button class="reset">清空</button>
-        <button>登录</button>
+        <button class="reset" @click="handlerReset">清空</button>
+        <button @click="handlerSubmit">登录</button>
       </view>
-    </form>
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
-  const handlerSubmit = (data: any): void => {
-    console.log(data);
+  import { reactive } from 'vue';
+  import { loginApi } from '../../network/api/index';
+
+  let form = reactive<{ username: string; password: string }>({
+    username: '',
+    password: '',
+  });
+  const handlerSubmit = async (): Promise<void> => {
+    const res = await loginApi({
+      data: {
+        username: form.username,
+        password: form.password,
+      },
+    });
+    if (res.data) {
+      uni.switchTab({ url: '/pages/message/Message' });
+    }
+    uni.setStorageSync('token', res.token);
+  };
+  const handlerReset = (data: any): void => {
+    form.password = '';
+    form.username = '';
   };
 </script>
 

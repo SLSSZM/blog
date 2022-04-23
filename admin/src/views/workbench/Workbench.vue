@@ -24,14 +24,15 @@
     <div class="stastics">
       <div class="card">
         <span class="title">网站访问量：</span>
-        <span class="data">{{ data.value.userViews }}</span>
+        <span class="data">{{ data.value.userViews || 0 }}</span>
       </div>
       <div class="card">
         <span class="title">文章总数：</span>
-        <span class="data">{{ data.value.articleTotal }}</span>
+        <span class="data">{{ data.value.articleTotal || 0 }}</span>
       </div>
     </div>
     <h3>热门文章：</h3>
+    <div v-if="!data.value.hotArticles?.length" class="notArticle">无</div>
     <div
       class="item card"
       v-for="item in data.value.hotArticles"
@@ -88,6 +89,10 @@
         text-align: end;
       }
     }
+  }
+  .notArticle {
+    text-align: center;
+    color: $color_tint;
   }
   .card {
     margin: 20px 10px;

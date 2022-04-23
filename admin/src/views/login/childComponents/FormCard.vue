@@ -16,22 +16,18 @@
   const login = (): void => {
     formRef.value?.validate(async (valid: any) => {
       if (valid) {
-        await loginApi(form);
+        const res = await loginApi(form);
+        localStorage.setItem('INFO', JSON.stringify(res.data));
         router.replace('/');
         ElMessage.success('登录成功');
       }
     });
   };
-  const watchEnter = (e: KeyboardEvent): void => {
-    if (e.key === 'Enter' && form.username && form.password) {
-      login();
-    }
-  };
 </script>
 
 <template>
   <div class="form-card">
-    <el-form ref="formRef" :model="form" :rules="rules" @keydown="watchEnter" size="large">
+    <el-form ref="formRef" :model="form" :rules="rules" @keydown.enter="login" size="large">
       <h3>登录</h3>
       <el-form-item prop="username">
         <el-input v-model="form.username" placeholder="账号"></el-input>

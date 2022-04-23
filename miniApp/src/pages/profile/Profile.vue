@@ -2,11 +2,20 @@
   <view class="profile">
     <image class="avatar" src="/static/logo.png" />
     <view class="name">admin</view>
-    <button>退出登录</button>
+    <button @click="loginOut">退出登录</button>
   </view>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { loginoutApi } from '../../network/api';
+  const loginOut = async (): Promise<void> => {
+    await loginoutApi();
+    uni.removeStorageSync('token');
+    uni.redirectTo({
+      url: '/pages/login/Login',
+    });
+  };
+</script>
 
 <style scoped lang="scss">
   .profile {

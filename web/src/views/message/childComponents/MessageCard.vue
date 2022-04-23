@@ -4,6 +4,10 @@
   import { Message } from '@/network/api';
   import dayjs from 'dayjs';
   import { randomAvatar } from '@/utils/config';
+  import 'dayjs/locale/zh-cn';
+  import relativeTime from 'dayjs/plugin/relativeTime';
+  dayjs.extend(relativeTime);
+  dayjs.locale('zh-cn');
   interface Props {
     value?: Message;
   }
@@ -22,7 +26,9 @@
       <img :src="randomAvatar()" />
       <div class="info">
         <div class="name">{{ props.value.name }}</div>
-        <div class="time">{{ dayjs(props.value.createdAt).format('YYYY-MM-DD HH:mm:ss') }}</div>
+        <div class="time">
+          {{ dayjs(props.value.createdAt).fromNow() }}
+        </div>
       </div>
     </div>
     <div class="content">

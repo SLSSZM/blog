@@ -13,14 +13,15 @@ export interface Workbench {
 }
 
 export async function loginApi(login: Login): Promise<ResponseResult> {
-  return await http.post<ResponseResult>('/admin/login', login);
+  localStorage.removeItem('INFO');
+  return await http.post<ResponseResult>('/login', login);
 }
 export async function loginoutApi(): Promise<ResponseResult> {
-  return await http.delete<ResponseResult>('/admin/loginout');
+  return await http.delete<ResponseResult>('/loginout');
 }
 export async function workbenchApi(): Promise<ResponseResult<Workbench>> {
-  return await http.get<ResponseResult<Workbench>>('/admin/workbench');
+  return await http.get<ResponseResult<Workbench>>('/workbench');
 }
-export async function uploadApi(file: File): Promise<ResponseResult> {
-  return await http.post<ResponseResult>('/admin/upload', file);
+export async function uploadApi(file: File | FormData): Promise<ResponseResult> {
+  return await http.post<ResponseResult>('/upload', file);
 }

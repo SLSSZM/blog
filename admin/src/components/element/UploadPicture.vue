@@ -6,7 +6,7 @@
   import { useRouter } from 'vue-router';
 
   const headers = reactive<any>({ authorization: 'Bearer ' + localStorage.token });
-  const api = import.meta.env.VITE_API + '/admin/upload';
+  const api = import.meta.env.VITE_API + '/upload';
 
   interface Props {
     image?: string;

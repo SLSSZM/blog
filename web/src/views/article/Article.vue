@@ -29,7 +29,7 @@
   };
   const route = useRoute();
   onMounted((): void => {
-    tagList.data = JSON.parse(localStorage.getItem('CONFIG') as string).tags;
+    tagList.data = JSON.parse(localStorage.getItem('CONFIG') as string)?.tags || [];
     const routeTag: string = route.params.tag as string;
     const routeTitle: string = route.params.title as string;
     if (routeTag) {

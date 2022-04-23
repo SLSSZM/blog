@@ -14,10 +14,10 @@ interface Query extends Message, RequestOptions {}
 export async function fetchMessageApi(
   query?: Query
 ): Promise<ResponseResult<ResponseListData<Message>>> {
-  return await http.get<ResponseResult<ResponseListData<Message>>>('/admin/rest/message', {
+  return await http.get<ResponseResult<ResponseListData<Message>>>('/rest/message', {
     params: query || {},
   });
 }
 export async function deleteMessageApi(id: string): Promise<ResponseResult<Message>> {
-  return await http.delete<ResponseResult<Message>>('/admin/rest/message/' + id);
+  return await http.delete<ResponseResult<Message>>('/rest/message/' + id);
 }

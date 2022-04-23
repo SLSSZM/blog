@@ -7,6 +7,7 @@ const Tag = () => import('@/views/tag/Tag.vue');
 const Login = () => import('@/views/login/Login.vue');
 const Config = () => import('@/views/config/Config.vue');
 const Message = () => import('@/views/message/Message.vue');
+const Account = () => import('@/views/account/Account.vue');
 
 const routes = [
   { path: '/', redirect: '/workbench' },
@@ -18,11 +19,12 @@ const routes = [
     children: [
       { path: '', component: Workbench },
       { path: '/config', name: 'Config', component: Config },
+      { path: '/account', name: 'Account', component: Account },
       { path: '/message', name: 'Message', component: Message },
       { path: '/article', name: 'Article', component: Article },
       { path: '/article/create', name: 'ArticleCreate', component: Edit },
       { path: '/article/edit', name: 'ArticleUpdate', component: Edit },
-      { path: '/tag', component: Tag },
+      { path: '/tag', name: 'Tag', component: Tag },
     ],
   },
 ];

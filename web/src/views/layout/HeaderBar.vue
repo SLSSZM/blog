@@ -23,8 +23,11 @@
     }
     currentScrollDistance = distance;
   };
+  let githubPath = ref<string>('');
   onMounted(() => {
-    document.addEventListener('scroll', e => {
+    githubPath.value =
+      JSON.parse(localStorage.getItem('CONFIG') || '{}')?.configs?.githubPath || '';
+    document.addEventListener('scroll', () => {
       scroll();
     });
   });
@@ -36,6 +39,9 @@
   const emits = defineEmits<{
     (e: 'openAside'): void;
   }>();
+  const dumpGithub = (): void => {
+    window.open(githubPath.value);
+  };
 </script>
 
 <template>
@@ -90,7 +96,7 @@
         v-else
         @click="themeStore.changeTheme(ThemeType.Light)"
       />
-      <iconfont class="fct hover icon" icon="&#xe645;" />
+      <iconfont class="fct hover icon github-icon" icon="&#xe645;" @click="dumpGithub" />
     </div>
     <iconfont class="fct hover icon menu-icon" icon="&#xe877;" @click="emits('openAside')" />
   </div>

@@ -38,6 +38,9 @@
       />
       <upload-picture height="100px" width="100px" @upload="config.data.userAvatar?.push($event)" />
     </el-form-item>
+    <el-form-item label="github链接：">
+      <el-input v-model="config.data.githubPath" />
+    </el-form-item>
     <el-form-item label="关于我：">
       <markdown v-model="config.data.description" />
     </el-form-item>
