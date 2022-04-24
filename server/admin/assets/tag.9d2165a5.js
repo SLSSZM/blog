@@ -1,0 +1,1 @@
+import{h as a}from"./index.57d77736.js";async function n(t){return await a.get("/rest/tag",{params:t||{}})}async function s(t,e){return await a.put("/rest/tag/"+t,e)}async function i(t){return await a.delete("/rest/tag/"+t)}async function c(t){return await a.post("/rest/tag/",t)}export{c,i as d,n as f,s as u};

@@ -4,7 +4,6 @@ const app = express();
 app.use(require('cors')());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.set('secret', 'dfhasdhfisf143r42adsfasf789670fd');
 app.set('api', 'http://localhost');
@@ -15,6 +14,9 @@ require('./plugin/db.js')(app);
 
 require('./routes/admin/index.js')(app);
 require('./routes/web/index.js')(app);
+
+app.use('/admin', express.static(__dirname + '/admin'));
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 // 错误响应
 app.use(async (err, req, res, next) => {
