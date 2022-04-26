@@ -41,7 +41,7 @@
     }
   };
   const handlerDelete = () => {
-    emits('upload', '');
+    emits('update:image', '');
     emits('delete');
   };
   let imageDialog = ref<boolean>(false);
