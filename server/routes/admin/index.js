@@ -151,4 +151,29 @@ module.exports = app => {
       token: req.token,
     });
   });
+
+  // 初始化
+  app.get('/api/admin/init', async (req, res) => {
+    const users = await AdminUser.find();
+    if (users.length) {
+      res.send({
+        code: 200,
+        data: '服务端正常',
+      });
+    } else {
+      const model = await AdminUser.create({
+        _id: '6223228367b10550ec6791a6',
+        username: 'admin',
+        password: '123456',
+        role: 'root',
+      });
+      res.send({
+        code: 200,
+        data: {
+          data: model,
+          msg: '初始化成功, 初始化账号为admin， 密码123456',
+        },
+      });
+    }
+  });
 };

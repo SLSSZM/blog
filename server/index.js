@@ -20,6 +20,7 @@ app.use('/uploads', express.static(__dirname + '/uploads'));
 
 // 错误响应
 app.use(async (err, req, res, next) => {
+  console.log(err);
   if (err.name === 'UnauthorizedError') {
     res.status(401).send({ message: err.message, code: 401 });
     return;
