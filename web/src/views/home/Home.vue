@@ -27,7 +27,7 @@
 
 <template>
   <div class="home">
-    <sentence class="sentence" />
+    <sentence class="sentence" :image="configData.data.configs?.image" />
     <chunk-title>
       <template #title>最新文章</template>
       <sl-search @search="router.push({ name: 'Article', params: { title: $event } })" />
