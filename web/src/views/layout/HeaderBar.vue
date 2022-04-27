@@ -3,6 +3,7 @@
   import { useThemeStore, ThemeType } from '@/store/theme';
   import { useRoute, useRouter } from 'vue-router';
   import Iconfont from '@/components/common/iconfont/Iconfont.vue';
+  import { useConfigStore } from '@/store/config';
 
   const themeStore = useThemeStore();
   // header高度
@@ -23,10 +24,8 @@
     }
     currentScrollDistance = distance;
   };
-  let githubPath = ref<string>('');
+  const configState = useConfigStore();
   onMounted(() => {
-    githubPath.value =
-      JSON.parse(localStorage.getItem('CONFIG') || '{}')?.configs?.githubPath || '';
     document.addEventListener('scroll', () => {
       scroll();
     });
@@ -40,7 +39,7 @@
     (e: 'openAside'): void;
   }>();
   const dumpGithub = (): void => {
-    window.open(githubPath.value);
+    window.open(configState.configData.configs.githubPath);
   };
 </script>
 

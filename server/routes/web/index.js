@@ -14,14 +14,20 @@ module.exports = app => {
     } else {
       configs = await Config.findOne({ userId: req.user._id });
     }
+    const tags = await Tag.find({ userId: req.user._id });
+    res.send({
+      code: 200,
+      data: { configs, tags },
+    });
+  });
+  router.get('/home', async (req, res) => {
     const articles = await Article.find({ userId: req.user._id, submit: true })
       .populate('tag')
       .sort({ createdAt: -1 })
       .limit(10);
-    const tags = await Tag.find({ userId: req.user._id });
     res.send({
       code: 200,
-      data: { configs, articles, tags },
+      data: articles,
     });
   });
   router.get('/article', async (req, res) => {

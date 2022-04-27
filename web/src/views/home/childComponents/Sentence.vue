@@ -3,6 +3,7 @@
   import ChunkTitle from '@/components/chunk/ChunkTitle.vue';
   import SlButton from '@/components/slButton/SlButton.vue';
   import { fetchSentence } from '@/network/api';
+  import { useConfigStore } from '@/store/config';
   import { onMounted, reactive, ref } from 'vue';
 
   interface SenTence {
@@ -32,12 +33,7 @@
   onMounted(async (): Promise<void> => {
     changeSentence();
   });
-  interface Props {
-    image: string;
-  }
-  const props = withDefaults(defineProps<Props>(), {
-    image: '',
-  });
+  const configState = useConfigStore();
 </script>
 
 <template>
@@ -46,7 +42,11 @@
       <template #title>诗词一言</template>
       <sl-button icon="&#xe626;" round @click="changeSentence">切换一言</sl-button>
     </chunk-title>
-    <chunk color class="chunk-card mock" :style="{ 'background-image': `url(${props.image})` }">
+    <chunk
+      color
+      class="chunk-card mock"
+      :style="{ 'background-image': `url(${configState.configData.configs.image})` }"
+    >
       <div class="content">{{ sentence.data.hitokoto }}</div>
       <div class="title" v-if="sentence.data.from">- 标题： {{ sentence.data.from }}</div>
       <div class="author" v-if="sentence.data.from_who">- 作者： {{ sentence.data.from_who }}</div>

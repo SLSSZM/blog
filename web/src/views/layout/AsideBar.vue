@@ -1,9 +1,10 @@
 <script setup lang="ts">
   import { useThemeStore, ThemeType } from '@/store/theme';
-  import { onMounted, reactive, ref, watch } from 'vue';
+  import { ref, watch } from 'vue';
   import Iconfont from '@/components/common/iconfont/Iconfont.vue';
   import SlButton from '@/components/slButton/SlButton.vue';
   import { useRoute, useRouter } from 'vue-router';
+  import { useConfigStore } from '@/store/config';
 
   const themeStore = useThemeStore();
   let width = ref<string>('300px');
@@ -35,15 +36,9 @@
     router.push(path);
     emits('close');
   };
-  let avatar = ref<string>('');
-  let githubPath = ref<string>('');
-  onMounted(() => {
-    const configs = JSON.parse(localStorage.getItem('CONFIG') || '{}')?.configs;
-    avatar.value = configs?.myAvatar || '';
-    githubPath.value = configs?.githubPath || '';
-  });
+  const configState = useConfigStore();
   const dumpGithub = (): void => {
-    window.open(githubPath.value);
+    window.open(configState.configData.configs.githubPath);
   };
 </script>
 
@@ -65,7 +60,7 @@
       <iconfont class="fct hover icon github-icon" icon="&#xe645;" @click="dumpGithub" />
     </div>
     <div class="avatar flex-c">
-      <img :src="avatar" alt="" />
+      <img :src="configState.configData?.configs?.myAvatar" alt="" />
     </div>
     <h1 class="flex-c" @click="dumpPage('/')">
       <span class="text hover fct"> <span class="letter">山岚设</span>色 </span>

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
+  import { onMounted, reactive, ref } from 'vue';
   import HeaderBar from '@/views/layout/HeaderBar.vue';
   import AsideBar from './views/layout/AsideBar.vue';
   import { useScrollLock } from '@vueuse/core';
-  import { ThemeType, useThemeStore } from './store/theme';
+  import { useThemeStore } from './store/theme';
   import { useRoute, useRouter } from 'vue-router';
+  import { useConfigStore } from './store/config';
+  import { fetchConfigApi } from './network/api';
 
   const themeStore = useThemeStore();
   let show = ref<boolean>(false);
@@ -18,16 +20,7 @@
 
     currentScrollDistance.value = distance;
   };
-  onMounted((): void => {
-    themeStore.init();
-    htmlRef.value = document.documentElement;
-    isLocked = useScrollLock(htmlRef);
-
-    document.addEventListener('scroll', e => {
-      scroll();
-    });
-  });
-
+  // 显示侧边栏
   const showAside = (closed?: boolean): void => {
     if (closed) {
       show.value = false;
@@ -39,9 +32,33 @@
   };
   const router = useRouter();
   const route = useRoute();
+  // 返回顶部
   const handlerBackTop = (): void => {
     router.push({ name: route.name as string, query: { ...route.query } });
   };
+
+  let configData = reactive<{ data: any }>({ data: {} });
+  const configState = useConfigStore();
+  onMounted(async (): Promise<void> => {
+    // 初始化主题
+    themeStore.init();
+    // 侧边栏出现锁住滚动
+    htmlRef.value = document.documentElement;
+    isLocked = useScrollLock(htmlRef);
+
+    document.addEventListener('scroll', e => {
+      scroll();
+    });
+
+    // 获取配置数据
+    const seeWeb = sessionStorage.getItem('seeWeb');
+    const res = await fetchConfigApi({ addView: !seeWeb });
+    configData.data = res.data;
+    configState.setConfigData(res.data);
+    if (!seeWeb) {
+      sessionStorage.setItem('seeWeb', 'true');
+    }
+  });
 </script>
 
 <template>

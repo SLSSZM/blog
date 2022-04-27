@@ -4,30 +4,24 @@
   import SlSearch from '../../components/slSearch/SlSearch.vue';
   import ArticleCard from './childComponents/ArticleCard.vue';
   import AsideTag from './childComponents/AsideTag.vue';
-  import { fetchConfigApi } from '@/network/api';
-  import { onMounted, reactive } from 'vue';
+  import { Article, fetchHomeApi } from '@/network/api';
+  import { reactive } from 'vue';
   import { useRouter } from 'vue-router';
+  import { useConfigStore } from '@/store/config';
 
-  let configData = reactive<{ data: any }>({ data: {} });
-  onMounted(async (): Promise<void> => {
-    const seeWeb = sessionStorage.getItem('seeWeb');
-    if (!seeWeb) {
-      const res = await fetchConfigApi({ addView: true });
-      configData.data = res.data;
-      localStorage.setItem('CONFIG', JSON.stringify(res.data));
-      sessionStorage.setItem('seeWeb', 'true');
-    } else {
-      const res = await fetchConfigApi();
-      configData.data = res.data;
-      localStorage.setItem('CONFIG', JSON.stringify(res.data));
-    }
-  });
+  let homeData = reactive<{ data: Article[] }>({ data: [] });
+  const fetchList = async (): Promise<void> => {
+    const res = await fetchHomeApi();
+    homeData.data = res.data;
+  };
+  fetchList();
   const router = useRouter();
+  const configState = useConfigStore();
 </script>
 
 <template>
   <div class="home">
-    <sentence class="sentence" :image="configData.data.configs?.image" />
+    <sentence class="sentence" />
     <chunk-title>
       <template #title>最新文章</template>
       <sl-search @search="router.push({ name: 'Article', params: { title: $event } })" />
@@ -36,7 +30,7 @@
       <div class="home-content">
         <article-card
           class="article-card"
-          v-for="item in configData.data.articles"
+          v-for="item in homeData.data"
           :key="item._id"
           :value="item"
         />
@@ -45,7 +39,7 @@
         </div>
       </div>
       <div class="home-aside">
-        <aside-tag :list="configData.data.tags" />
+        <aside-tag :list="configState.configData.tags" />
       </div>
     </div>
   </div>

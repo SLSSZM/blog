@@ -11,9 +11,7 @@
     const res = await fetchMessage();
     List.data = res.data;
   };
-  onMounted(() => {
-    fetchList();
-  });
+  fetchList();
 </script>
 
 <template>

@@ -1,17 +1,13 @@
 <script setup lang="ts">
   import VMdEditor from '@/components/common/v-md-editor/VMdEditor.vue';
-  import { onMounted, ref } from 'vue';
   import Chunk from '@/components/chunk/Chunk.vue';
+  import { useConfigStore } from '@/store/config';
 
-  let about = ref<string>('');
-  onMounted(async (): Promise<void> => {
-    const res = JSON.parse(localStorage.getItem('CONFIG') || '{}');
-    about.value = res?.configs?.description || '';
-  });
+  const configState = useConfigStore();
 </script>
 <template>
   <chunk color class="chunk">
-    <v-md-editor :value="about" />
+    <v-md-editor :value="configState.configData.configs.description" />
   </chunk>
 </template>
 

@@ -15,6 +15,16 @@ export interface Article {
   tag?: Tag[];
   body?: string;
 }
+export interface ConfigData {
+  configs: {
+    myAvatar: string;
+    githubPath: string;
+    description: string;
+    userAvatar: string[];
+    image: string;
+  };
+  tags: Tag[];
+}
 
 export interface Message {
   _id?: string;
@@ -29,8 +39,12 @@ interface ArticleQuery extends Article {
   count?: number;
 }
 
-export async function fetchConfigApi(params?: any): Promise<ResponseResult> {
-  return await http.get<ResponseResult>('/config', { params: params || {} });
+export async function fetchConfigApi(params?: any): Promise<ResponseResult<ConfigData>> {
+  return await http.get<ResponseResult<ConfigData>>('/config', { params: params || {} });
+}
+
+export async function fetchHomeApi(): Promise<ResponseResult<Article[]>> {
+  return await http.get<ResponseResult<Article[]>>('/home');
 }
 
 export async function fetchArticle(query?: ArticleQuery): Promise<ResponseResult<Article[]>> {

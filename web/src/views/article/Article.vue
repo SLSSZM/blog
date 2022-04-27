@@ -4,11 +4,13 @@
   import ArticleCard from './childComponents/ArticleCard.vue';
   import SlSearch from '@/components/slSearch/SlSearch.vue';
   import SlTag from '@/components/slTag/SlTag.vue';
-  import { onMounted, reactive, ref } from 'vue';
+  import { reactive, ref } from 'vue';
   import { fetchArticle, Article, Tag } from '@/network/api';
   import { useRoute } from 'vue-router';
+  import { useConfigStore } from '@/store/config';
 
-  let tagList = reactive<{ data: Tag[] }>({ data: [] });
+  const configState = useConfigStore();
+  let tagList = reactive<{ data: Tag[] }>({ data: configState?.configData?.tags });
   let articleList = reactive<{ data: Article[] }>({ data: [] });
   let selectTagList = reactive<{ data: string[] }>({ data: [] });
   let selectTitle = ref<string>('');
@@ -27,18 +29,17 @@
       showAddArticleButton.value = false;
     }
   };
+
   const route = useRoute();
-  onMounted((): void => {
-    tagList.data = JSON.parse(localStorage.getItem('CONFIG') || '{}')?.tags || [];
-    const routeTag: string = route.params.tag as string;
-    const routeTitle: string = route.params.title as string;
-    if (routeTag) {
-      selectTagList.data = [routeTag];
-    } else if (routeTitle) {
-      selectTitle.value = routeTitle;
-    }
-    fetchData();
-  });
+  const routeTag: string = route.params.tag as string;
+  const routeTitle: string = route.params.title as string;
+  if (routeTag) {
+    selectTagList.data = [routeTag];
+  } else if (routeTitle) {
+    selectTitle.value = routeTitle;
+  }
+  fetchData();
+
   const selectTag = (name: string): void => {
     const index = selectTagList.data.indexOf(name);
     if (index > -1) {
