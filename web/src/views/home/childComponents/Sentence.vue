@@ -30,9 +30,11 @@
     }
   };
   let image = ref<string>('');
+  let key = ref<number>(0);
   onMounted(async (): Promise<void> => {
     changeSentence();
     image.value = JSON.parse(localStorage.getItem('CONFIG') || '{}')?.configs?.image || '';
+    key.value++;
   });
 </script>
 
@@ -43,7 +45,7 @@
       <sl-button icon="&#xe626;" round @click="changeSentence">切换一言</sl-button>
     </chunk-title>
     <chunk color class="chunk-card mock" :style="{ 'background-image': `url()` }">
-      <img :src="image" class="bg-image" alt="" />
+      <img :src="image" class="bg-image" alt="" :key="key" />
       <div>
         <div class="content">{{ sentence.data.hitokoto }}</div>
         <div class="title" v-if="sentence.data.from">- 标题： {{ sentence.data.from }}</div>
