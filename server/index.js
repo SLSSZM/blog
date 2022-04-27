@@ -50,6 +50,6 @@ app.use(async (err, req, res, next) => {
   });
 });
 
-app.listen(Number(app.get('port')), () => {
+app.listen(3005, () => {
   console.log(app.get('fullApi'));
 });
