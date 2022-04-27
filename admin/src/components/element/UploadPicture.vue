@@ -1,9 +1,10 @@
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
+  import { reactive } from 'vue';
   import { Plus, Delete, ZoomIn } from '@element-plus/icons-vue';
   import { ElMessage } from 'element-plus';
   import { UploadFile } from 'element-plus/es/components/upload/src/upload.type';
   import { useRouter } from 'vue-router';
+  import { compress, compressAccurately } from 'image-conversion';
 
   const headers = reactive<any>({ authorization: 'Bearer ' + localStorage.token });
   const api = import.meta.env.VITE_API + '/upload';
@@ -44,7 +45,18 @@
     emits('update:image', '');
     emits('delete');
   };
-  let imageDialog = ref<boolean>(false);
+  const beforeUpload = async (rawFile: any): Promise<Blob> => {
+    if (rawFile.size / 1024 / 1024 < 1) {
+      return await compress(rawFile, 0.8);
+    }
+    return await compressAccurately(rawFile, {
+      size: 1024,
+      accuracy: 0.8,
+    });
+  };
+  const openImage = (): void => {
+    window.open(props.image);
+  };
 </script>
 
 <template>
@@ -57,17 +69,15 @@
       :on-success="handleUploadSuccess"
       :on-error="handlerUploadError"
       :disabled="disabled"
+      :before-upload="beforeUpload"
     >
       <img v-if="props.image" :src="props.image" class="avatar" cover />
       <el-icon v-else class="avatar-uploader-icon"><plus /></el-icon>
       <div v-if="props.image" class="hover-icon">
-        <el-icon class="preview-icon" @click.stop="imageDialog = true"><zoom-in /></el-icon>
+        <el-icon class="preview-icon" @click.stop="openImage"><zoom-in /></el-icon>
         <el-icon class="preview-icon" @click.stop="handlerDelete"><delete /></el-icon>
       </div>
     </el-upload>
-    <el-dialog v-model="imageDialog">
-      <img style="width: 100%" :src="props.image" cover />
-    </el-dialog>
   </div>
 </template>
 
@@ -85,6 +95,17 @@
     &:hover {
       .hover-icon {
         display: flex;
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: inherit;
+        z-index: 1;
       }
     }
   }
@@ -114,7 +135,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1;
+    z-index: 2;
     justify-content: center;
     align-items: center;
     .preview-icon {

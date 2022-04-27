@@ -34,7 +34,7 @@
         :key="item"
         :image="item"
         disabled
-        @delete="config.data.userAvatar = config.data.userAvatar?.splice(index)"
+        @delete="config.data.userAvatar?.splice(index, 1)"
       />
       <upload-picture height="100px" width="100px" @upload="config.data.userAvatar?.push($event)" />
     </el-form-item>

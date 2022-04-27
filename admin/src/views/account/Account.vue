@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { fetchAccountApi, Account, deleteAccountApi } from '@/network/api/account';
-  import { Delete } from '@element-plus/icons-vue';
+  import { Delete, Edit } from '@element-plus/icons-vue';
   import { ElMessage } from 'element-plus';
   import { inject, reactive, Ref, ref } from 'vue';
   import AccountForm from './childComponents/AccountForm.vue';
@@ -82,17 +82,14 @@
           {{ dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
       </el-table-column>
-      <el-table-column label="修改">
+      <el-table-column label="修改" align="center">
         <template #default="{ row }">
-          <el-button type="text" @click="handlerCreate(row)">修改信息</el-button>
+          <el-button round size="large" @click="handlerCreate(row)">
+            <el-icon><edit /></el-icon>
+          </el-button>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        min-width="200px"
-        :fixed="clientLevel === 3 ? false : 'right'"
-        label="删除"
-      >
+      <el-table-column align="center" label="删除">
         <template #default="{ row }">
           <el-button round size="large" @click="handlerDelete(row._id)">
             <el-icon><delete /></el-icon>

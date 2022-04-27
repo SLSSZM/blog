@@ -29,7 +29,7 @@
   };
   const route = useRoute();
   onMounted((): void => {
-    tagList.data = JSON.parse(localStorage.getItem('CONFIG' || '{}') as string)?.tags || [];
+    tagList.data = JSON.parse(localStorage.getItem('CONFIG') || '{}')?.tags || [];
     const routeTag: string = route.params.tag as string;
     const routeTitle: string = route.params.title as string;
     if (routeTag) {
@@ -46,6 +46,7 @@
     } else {
       selectTagList.data.push(name);
     }
+    articleList.data = [];
     fetchData();
   };
   const handlerSearch = (title: string): void => {

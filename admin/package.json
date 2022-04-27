@@ -12,6 +12,7 @@
     "@kangc/v-md-editor": "^2.3.14",
     "axios": "^0.25.0",
     "element-plus": "^2.0.1",
+    "image-conversion": "^2.1.1",
     "pinia": "^2.0.11",
     "vue": "^3.2.25",
     "vue-router": "4"

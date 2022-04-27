@@ -20,6 +20,6 @@ export default defineConfig(({ command, mode }) => ({
     },
   },
   build: {
-    outDir: command === 'build' ? resolve(__dirname, '../server/public') : 'dist',
+    outDir: command === 'build' ? resolve(__dirname, '../server/public/admin') : 'dist',
   },
 }));

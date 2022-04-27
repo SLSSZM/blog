@@ -1,1 +1,0 @@
-import{h as t}from"./index.57d77736.js";async function o(a){return localStorage.removeItem("INFO"),await t.post("/login",a)}async function i(){return await t.delete("/loginout")}async function e(){return await t.get("/workbench")}async function r(a){return await t.post("/upload",a)}export{o as a,i as l,r as u,e as w};

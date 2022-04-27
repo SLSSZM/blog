@@ -9,6 +9,7 @@ const auth = require('../../middleware/auth.js');
 const redis = require('../../plugin/redis');
 const multer = require('multer');
 const Config = require('../../models/Config.js');
+const path = require('path');
 
 module.exports = app => {
   require('./config')(app);
@@ -141,7 +142,18 @@ module.exports = app => {
     });
   });
   // 图片上传api
-  const upload = multer({ dest: __dirname + '/../../uploads' });
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, __dirname + '/../../public/uploads');
+    },
+    filename: function (req, file, cb) {
+      let extname = path.extname(file.originalname);
+      const filedname =
+        file.originalname.split('.')[0] + Date.now() + '-' + Math.round(Math.random() * 1e9);
+      cb(null, filedname + extname); //文件名
+    },
+  });
+  const upload = multer({ storage });
   app.post('/api/admin/upload', auth(app), upload.single('file'), (req, res) => {
     const file = req.file;
     file.url = app.get('fullApi') + '/uploads/' + file.filename;
@@ -162,7 +174,6 @@ module.exports = app => {
       });
     } else {
       const model = await AdminUser.create({
-        _id: '6223228367b10550ec6791a6',
         username: 'admin',
         password: '123456',
         role: 'root',

@@ -93,7 +93,11 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="image" label="图片" style="width: 100%">
-        <upload-picture v-model:image="article.data.image" style="width: 100%" />
+        <upload-picture
+          v-model:image="article.data.image"
+          style="width: 100%"
+          :height="article.data.image ? '500px' : undefined"
+        />
       </el-form-item>
       <el-form-item style="width: 100%; margin-bottom: 20px">
         <markdown v-model="article.data.body" />

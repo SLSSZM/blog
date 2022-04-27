@@ -5,7 +5,7 @@
 
   let about = ref<string>('');
   onMounted(async (): Promise<void> => {
-    const res = JSON.parse(localStorage.getItem('CONFIG') || '[]');
+    const res = JSON.parse(localStorage.getItem('CONFIG') || '{}');
     about.value = res?.configs?.description || '';
   });
 </script>

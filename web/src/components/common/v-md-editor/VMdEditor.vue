@@ -63,5 +63,9 @@
   :deep(.vuepress-markdown-body) {
     background-color: transparent;
     color: var(--fc);
+    .v-md-plugin-tip {
+      background-color: var(--bg);
+      opacity: 0.8;
+    }
   }
 </style>

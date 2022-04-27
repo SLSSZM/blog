@@ -1,6 +1,6 @@
 const assert = require('http-assert');
 const redis = require('redis');
-const client = redis.createClient();
+const client = redis.createClient(process.env.REDISPASS ? { password: process.env.REDISPASS } : {});
 
 client.connect();
 
