@@ -9,7 +9,7 @@ const Tag = require('../../models/Tag.js');
 module.exports = app => {
   router.get('/config', async (req, res) => {
     let configs = {};
-    if (req.query.addView) {
+    if (req.query.addView === 'true') {
       configs = await Config.findOneAndUpdate({ userId: req.user._id }, { $inc: { views: 1 } });
     } else {
       configs = await Config.findOne({ userId: req.user._id });
