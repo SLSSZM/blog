@@ -42,10 +42,15 @@
       <template #title>诗词一言</template>
       <sl-button icon="&#xe626;" round @click="changeSentence">切换一言</sl-button>
     </chunk-title>
-    <chunk color class="chunk-card mock" :style="{ 'background-image': `url(${image})` }">
-      <div class="content">{{ sentence.data.hitokoto }}</div>
-      <div class="title" v-if="sentence.data.from">- 标题： {{ sentence.data.from }}</div>
-      <div class="author" v-if="sentence.data.from_who">- 作者： {{ sentence.data.from_who }}</div>
+    <chunk color class="chunk-card mock" :style="{ 'background-image': `url()` }">
+      <img :src="image" class="bg-image" alt="" />
+      <div>
+        <div class="content">{{ sentence.data.hitokoto }}</div>
+        <div class="title" v-if="sentence.data.from">- 标题： {{ sentence.data.from }}</div>
+        <div class="author" v-if="sentence.data.from_who">
+          - 作者： {{ sentence.data.from_who }}
+        </div>
+      </div>
     </chunk>
   </chunk>
 </template>
@@ -60,10 +65,16 @@
     justify-content: flex-end;
 
     color: #fff;
-
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    .bg-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      object-fit: cover;
+      object-position: center;
+    }
     .content {
       font-weight: bold;
       font-size: 21px;

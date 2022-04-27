@@ -51,6 +51,7 @@
   };
   const handlerSearch = (title: string): void => {
     selectTitle.value = title;
+    articleList.data = [];
     fetchData();
   };
   const handlerAddArticleButton = async (): Promise<void> => {
