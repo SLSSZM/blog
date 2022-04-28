@@ -73,6 +73,7 @@
     }
   }
   .info {
+    padding: 0 10px 10px;
     .image {
       img {
         object-fit: cover;
