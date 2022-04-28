@@ -25,3 +25,6 @@ export async function workbenchApi(): Promise<ResponseResult<Workbench>> {
 export async function uploadApi(file: File | FormData): Promise<ResponseResult> {
   return await http.post<ResponseResult>('/upload', file);
 }
+export async function deleteUploadApi(): Promise<ResponseResult> {
+  return await http.delete<ResponseResult>('/upload');
+}

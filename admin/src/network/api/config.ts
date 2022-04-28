@@ -8,6 +8,7 @@ export interface Config {
   userAvatar?: string[];
   description?: string;
   githubPath?: string;
+  userId?: string;
 }
 
 export async function fetchConfigApi(): Promise<ResponseResult<Config>> {

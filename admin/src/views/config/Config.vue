@@ -19,6 +19,9 @@
 
 <template>
   <el-form class="config" label-width="150px" size="large">
+    <el-form-item label="用户ID：">
+      {{ config.data.userId }}
+    </el-form-item>
     <el-form-item label="一言背景图：">
       <upload-picture width="500px" height="200px" v-model:image="config.data.image" />
     </el-form-item>

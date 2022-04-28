@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 public/admin
-public/uploads
+public/uploads/*
 
 # Editor directories and files
 .vscode/*

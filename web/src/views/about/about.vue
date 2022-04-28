@@ -14,6 +14,7 @@
 <style scoped lang="scss">
   .chunk {
     margin-top: 30px;
+    padding: 10px;
   }
   @media screen and (max-width: 1200px) {
     .header {

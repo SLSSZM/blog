@@ -36,9 +36,11 @@
   };
   const router = useRouter();
   const handlerUploadError = (res: any, file: UploadFile) => {
-    ElMessage.error('图片上传失败');
     if (res.status === 401) {
       router.replace('/login');
+    } else {
+      ElMessage.error('图片上传失败');
+      console.log(res);
     }
   };
   const handlerDelete = () => {

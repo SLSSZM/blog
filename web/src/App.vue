@@ -1,35 +1,28 @@
 <script setup lang="ts">
-  import { onMounted, reactive, ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import HeaderBar from '@/views/layout/HeaderBar.vue';
   import AsideBar from './views/layout/AsideBar.vue';
-  import { useScrollLock } from '@vueuse/core';
   import { useThemeStore } from './store/theme';
   import { useRoute, useRouter } from 'vue-router';
   import { useConfigStore } from './store/config';
   import { fetchConfigApi } from './network/api';
 
   const themeStore = useThemeStore();
-  let show = ref<boolean>(false);
+  const configState = useConfigStore();
+
   let htmlRef = ref<HTMLElement | null>(null);
-  let isLocked = ref<boolean>(false);
-
-  // 当前滚动高度
-  let currentScrollDistance = ref<number>(0);
-  const scroll = (): void => {
-    const distance: number = document.documentElement.scrollTop || document.body.scrollTop;
-
-    currentScrollDistance.value = distance;
-  };
+  let show = ref<boolean>(false);
   // 显示侧边栏
   const showAside = (closed?: boolean): void => {
     if (closed) {
       show.value = false;
-      isLocked.value = false;
+      htmlRef.value!.style.overflow = 'auto';
       return;
     }
     show.value = true;
-    isLocked.value = true;
+    htmlRef.value!.style.overflow = 'hidden';
   };
+
   const router = useRouter();
   const route = useRoute();
   // 返回顶部
@@ -37,27 +30,28 @@
     router.push({ name: route.name as string, query: { ...route.query } });
   };
 
-  let configData = reactive<{ data: any }>({ data: {} });
-  const configState = useConfigStore();
   onMounted(async (): Promise<void> => {
+    htmlRef.value = document.documentElement;
     // 初始化主题
     themeStore.init();
-    // 侧边栏出现锁住滚动
-    htmlRef.value = document.documentElement;
-    isLocked = useScrollLock(htmlRef);
 
-    document.addEventListener('scroll', e => {
-      scroll();
+    // 监听滚动
+    document.addEventListener('scroll', () => {
+      configState.setScroll();
     });
 
     // 获取配置数据
     const seeWeb = sessionStorage.getItem('seeWeb');
     const res = await fetchConfigApi({ addView: !seeWeb });
-    configData.data = res.data;
     configState.setConfigData(res.data);
     if (!seeWeb) {
       sessionStorage.setItem('seeWeb', 'true');
     }
+  });
+
+  router.beforeResolve((to, from, next) => {
+    configState.initScroll();
+    next();
   });
 </script>
 
@@ -69,7 +63,7 @@
     <div class="container">
       <router-view></router-view>
     </div>
-    <div class="back-top" v-show="currentScrollDistance > 200" @click="handlerBackTop"></div>
+    <div class="back-top" v-if="configState.scrollTop > 200" @click="handlerBackTop"></div>
   </div>
 </template>
 

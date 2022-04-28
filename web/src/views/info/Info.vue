@@ -80,7 +80,6 @@
       }
     }
     .text {
-      padding: 0 40px;
       h1 {
         text-align: center;
       }
@@ -90,10 +89,16 @@
     .header {
       height: 25px;
     }
+    .info .text h1 {
+      font-size: 30px;
+    }
   }
   @media screen and (max-width: 750px) {
     .header {
       height: 20px;
+    }
+    .info .text h1 {
+      font-size: 25px;
     }
   }
 </style>

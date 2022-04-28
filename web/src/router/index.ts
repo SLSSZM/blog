@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import {
   createMemoryHistory,
   createRouter as _createRouter,
@@ -31,10 +32,15 @@ export function createRouter() {
       from: RouteLocationNormalizedLoaded,
       savedPosition: any
     ) => {
-      if (savedPosition) {
+      if (savedPosition?.top) {
+        nextTick(() => {
+          setTimeout(() => {
+            document.documentElement.scrollTop = savedPosition.top;
+          }, 80);
+        });
         return savedPosition;
       }
-      return { top: 0, behavior: 'smooth' };
+      return { left: 0, top: 0, behavior: 'smooth' };
     },
   });
 }

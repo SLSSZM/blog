@@ -39,33 +39,78 @@ interface ArticleQuery extends Article {
   count?: number;
 }
 
+interface MessageQuery extends Message {
+  page?: number;
+  count?: number;
+}
+
+interface ResultList<T = any> {
+  list: T[];
+  total: number;
+}
+
 export async function fetchConfigApi(params?: any): Promise<ResponseResult<ConfigData>> {
-  return await http.get<ResponseResult<ConfigData>>('/config', { params: params || {} });
+  try {
+    return await http.get<ResponseResult<ConfigData>>('/config', { params: params || {} });
+  } catch (err) {
+    console.log(err);
+    return err as ResponseResult<ConfigData>;
+  }
 }
 
 export async function fetchHomeApi(): Promise<ResponseResult<Article[]>> {
-  return await http.get<ResponseResult<Article[]>>('/home');
+  try {
+    return await http.get<ResponseResult<Article[]>>('/home');
+  } catch (err) {
+    return err as ResponseResult<Article[]>;
+  }
 }
 
-export async function fetchArticle(query?: ArticleQuery): Promise<ResponseResult<Article[]>> {
-  return await http.get<ResponseResult<Article[]>>('/article', { params: query });
+export async function fetchArticle(
+  query?: ArticleQuery
+): Promise<ResponseResult<ResultList<Article>>> {
+  try {
+    return await http.get<ResponseResult<ResultList<Article>>>('/article', {
+      params: query,
+    });
+  } catch (err) {
+    return err as ResponseResult<ResultList<Article>>;
+  }
 }
 
 export async function fetchArticleOne(id: string, params?: any): Promise<ResponseResult<Article>> {
-  return await http.get<ResponseResult<Article>>('/article/' + id, { params: params || {} });
+  try {
+    return await http.get<ResponseResult<Article>>('/article/' + id, { params: params || {} });
+  } catch (err) {
+    return err as ResponseResult<Article>;
+  }
 }
 
 export async function fetchSentence(): Promise<any> {
-  return await http.get('https://v1.hitokoto.cn/', {
-    baseURL: '',
-    params: { c: 'i' },
-  });
+  try {
+    return await http.get('https://v1.hitokoto.cn/', {
+      baseURL: '',
+      params: { c: 'i' },
+    });
+  } catch (err) {
+    return err as ResponseResult<Article>;
+  }
 }
 
-export async function fetchMessage(): Promise<ResponseResult<Message[]>> {
-  return await http.get<ResponseResult<Message[]>>('/message');
+export async function fetchMessage(
+  query: MessageQuery
+): Promise<ResponseResult<ResultList<Message>>> {
+  try {
+    return await http.get<ResponseResult<ResultList<Message>>>('/message', { params: query });
+  } catch (err) {
+    return err as ResponseResult<ResultList<Message>>;
+  }
 }
 
 export async function createMessage(message: Message): Promise<ResponseResult<Message>> {
-  return await http.post<ResponseResult<Message>>('/message', message);
+  try {
+    return await http.post<ResponseResult<Message>>('/message', message);
+  } catch (err) {
+    return err as ResponseResult<Message>;
+  }
 }

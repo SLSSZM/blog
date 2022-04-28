@@ -6,6 +6,7 @@
   import { transformChineseTime } from '@/utils/time';
   import { useRouter } from 'vue-router';
   import { Article } from '@/network/api';
+  import { ref } from 'vue';
 
   interface Props {
     value?: Article;
@@ -25,6 +26,10 @@
   const dumpAriticleInfo = (): void => {
     router.push({ name: 'Info', query: { id: props.value._id } });
   };
+  let description = ref<string>(props.value.description || '');
+  if (description.value.length > 100) {
+    description.value = description.value.slice(0, 100) + '...';
+  }
 </script>
 
 <template>
@@ -35,7 +40,7 @@
     <div class="body">
       <h3 class="title" @click="dumpAriticleInfo">{{ props.value.title }}</h3>
       <div class="date fct">{{ transformChineseTime(props.value.createdAt!) }}</div>
-      <p class="description">{{ props.value.description }}</p>
+      <p class="description">{{ description }}</p>
       <div class="tag">
         <sl-tag plain mini v-for="item in props.value.tag" :key="item._id">{{ item.name }}</sl-tag>
       </div>
@@ -88,7 +93,6 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 5px;
         margin-bottom: 5px;
         .views {
           font-size: 16px;
@@ -116,10 +120,6 @@
       .body {
         .description {
           font-size: 14px;
-          width: 100%;
-          overflow: hidden; //超出一行文字自动隐藏
-          text-overflow: ellipsis; //文字隐藏后添加省略号
-          white-space: nowrap; //强制不换行
         }
       }
     }

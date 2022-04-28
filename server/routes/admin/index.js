@@ -10,8 +10,11 @@ const redis = require('../../plugin/redis');
 const multer = require('multer');
 const Config = require('../../models/Config.js');
 const path = require('path');
+const RoleAuth = require('../../middleware/roleAuth');
+const fs = require('fs');
+const { resolve } = require('path');
 
-module.exports = app => {
+module.exports = (app) => {
   require('./config')(app);
   require('./account')(app);
 
@@ -36,8 +39,7 @@ module.exports = app => {
     }
     page && (queryOptions.skip = count * (page - 1));
     count && (queryOptions.limit = count);
-
-    const list = await req.Model.find(query).setOptions(queryOptions);
+    const list = await req.Model.find(query).setOptions(queryOptions).sort('-createdAt');
     const total = await req.Model.find(query).count();
     res.send({
       code: 200,
@@ -148,8 +150,7 @@ module.exports = app => {
     },
     filename: function (req, file, cb) {
       let extname = path.extname(file.originalname);
-      const filedname =
-        file.originalname.split('.')[0] + Date.now() + '-' + Math.round(Math.random() * 1e9);
+      const filedname = file.originalname.split('.')[0] + Date.now() + '-' + Math.round(Math.random() * 1e9);
       cb(null, filedname + extname); //文件名
     },
   });
@@ -186,5 +187,35 @@ module.exports = app => {
         },
       });
     }
+  }); // 清除过期图片
+  app.delete('/api/admin/upload', auth(app), RoleAuth(), async (req, res) => {
+    let imageApiList = [];
+    const articles = await Article.find();
+    const configs = await Config.find();
+    articles.forEach((i) => {
+      i.image && imageApiList.push(i.image);
+    });
+    configs.forEach((i) => {
+      i.image && imageApiList.push(i.image);
+      i.myAvatar && imageApiList.push(i.myAvatar);
+      i.userAvatar && i.userAvatar.length && Array.prototype.push.apply(imageApiList, i.userAvatar);
+    });
+    imageApiList = imageApiList.map((i) => {
+      return i.split('/').pop();
+    });
+    fs.readdir(resolve(__dirname + '/../../public/uploads'), (err, files) => {
+      files.forEach((file) => {
+        let path = resolve(__dirname + '/../../public/uploads', file);
+        if (path.indexOf('\\') > -1) {
+          path = path.replace(/\\/g, '/');
+        }
+        if (imageApiList.indexOf(file) === -1) {
+          fs.unlinkSync(path);
+        }
+      });
+    });
+    res.send({
+      code: 200,
+    });
   });
 };

@@ -38,9 +38,12 @@ module.exports = app => {
     query.title = new RegExp(query.title, 'ig');
     query.page = +(query.page || 1);
     query.count = +(query.count || 10);
-    const model = await Article.aggregate([
+    const list = await Article.aggregate([
       {
-        $match: { userId: req.user._id, title: query.title },
+        $match: { userId: req.user._id, title: query.title, submit: true },
+      },
+      {
+        $sort: { createdAt: -1 },
       },
       {
         $lookup: {
@@ -60,9 +63,28 @@ module.exports = app => {
         $limit: query.count,
       },
     ]);
+    const count = await Article.aggregate([
+      {
+        $match: { userId: req.user._id, title: query.title, submit: true },
+      },
+      {
+        $lookup: {
+          from: 'tags',
+          localField: 'tag',
+          foreignField: '_id',
+          as: 'tag',
+        },
+      },
+      {
+        $match: query.tag && query.tag.length ? { 'tag.name': { $in: query.tag } } : {},
+      },
+      {
+        $count: 'total',
+      },
+    ]);
     res.send({
       code: 200,
-      data: model,
+      data: { list, total: count[0].total },
     });
   });
   router.get('/article/:id', async (req, res) => {
@@ -81,12 +103,15 @@ module.exports = app => {
     });
   });
   router.get('/message', async (req, res) => {
-    const model = await Message.find({ userId: req.user._id })
+    const list = await Message.find({ userId: req.user._id })
+      .skip(req.query.count * (req.query.page - 1) || 0)
+      .limit(req.query.count || 10)
       .select('-email')
       .sort({ createdAt: -1 });
+    const total = await Message.find({ userId: req.user._id }).count();
     res.send({
       code: 200,
-      data: model,
+      data: { list, total },
     });
   });
   router.post('/message', async (req, res) => {

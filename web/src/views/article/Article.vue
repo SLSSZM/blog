@@ -4,19 +4,19 @@
   import ArticleCard from './childComponents/ArticleCard.vue';
   import SlSearch from '@/components/slSearch/SlSearch.vue';
   import SlTag from '@/components/slTag/SlTag.vue';
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, watch } from 'vue';
   import { fetchArticle, Article, Tag } from '@/network/api';
   import { useRoute } from 'vue-router';
   import { useConfigStore } from '@/store/config';
 
   const configState = useConfigStore();
-  let tagList = reactive<{ data: Tag[] }>({ data: configState?.configData?.tags });
-  let articleList = reactive<{ data: Article[] }>({ data: [] });
+  let list = reactive<{ data: Article[] }>({ data: [] });
   let selectTagList = reactive<{ data: string[] }>({ data: [] });
   let selectTitle = ref<string>('');
   let page = ref<number>(1);
-  let count = ref<number>(10);
-  let showAddArticleButton = ref<boolean>(true);
+  let count = ref<number>(5);
+  let isAddArticle = ref<boolean>(true);
+
   const fetchData = async (): Promise<void> => {
     const res = await fetchArticle({
       title: selectTitle.value,
@@ -24,9 +24,10 @@
       page: page.value,
       count: count.value,
     });
-    Array.prototype.push.apply(articleList.data, res.data);
-    if (res.data.length < count.value) {
-      showAddArticleButton.value = false;
+    Array.prototype.push.apply(list.data, res.data.list || []);
+    // 如果列表等于数量，则不在请求
+    if (res.data.total <= list.data.length) {
+      isAddArticle.value = false;
     }
   };
 
@@ -47,18 +48,26 @@
     } else {
       selectTagList.data.push(name);
     }
-    articleList.data = [];
+    page.value = 1;
+    list.data = [];
     fetchData();
   };
   const handlerSearch = (title: string): void => {
     selectTitle.value = title;
-    articleList.data = [];
+    page.value = 1;
+    list.data = [];
     fetchData();
   };
-  const handlerAddArticleButton = async (): Promise<void> => {
+  const handlerAddArticle = (): void => {
     page.value++;
-    await fetchData();
+    fetchData();
   };
+  watch(
+    () => configState.isScrollBottom,
+    (value: boolean) => {
+      value && isAddArticle.value && handlerAddArticle();
+    }
+  );
 </script>
 <template>
   <chunk class="article">
@@ -73,7 +82,7 @@
       <div class="article-tag">
         标签：
         <sl-tag
-          v-for="item in tagList.data"
+          v-for="item in configState.configData.tags"
           :key="item._id"
           plain
           @click="selectTag(item.name)"
@@ -87,22 +96,10 @@
     <chunk-title>
       <template #title>全部文章</template>
     </chunk-title>
-    <chunk color v-if="articleList.data.length">
-      <article-card
-        class="article-card"
-        v-for="item in articleList.data"
-        :key="item._id"
-        :value="item"
-      />
+    <chunk color v-if="list.data.length">
+      <article-card class="article-card" v-for="item in list.data" :key="item._id" :value="item" />
     </chunk>
-    <div
-      class="show-all-article"
-      v-if="articleList.data.length && showAddArticleButton"
-      @click="handlerAddArticleButton"
-    >
-      点击加载更多文章
-    </div>
-    <div v-else class="notArticle">暂无更多文章~</div>
+    <div v-if="!isAddArticle || !list.data.length" class="notArticle">暂无更多文章~</div>
   </chunk>
 </template>
 
@@ -143,15 +140,6 @@
         height: 0;
       }
     }
-  }
-  .show-all-article {
-    padding: 12px;
-    margin: 30px 0;
-    text-align: center;
-    color: var(--fct);
-    cursor: pointer;
-    border-radius: var(--br);
-    background-color: var(--hover);
   }
   .notArticle {
     margin: 30px 0;

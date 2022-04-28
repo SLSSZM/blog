@@ -33,7 +33,7 @@
 <style scoped lang="scss">
   .sl-tag {
     padding: 5px 10px;
-    margin: 5px;
+    margin: 5px 10px 5px 0px;
     border-radius: 5px;
     background-color: var(--danger);
     color: #fff;

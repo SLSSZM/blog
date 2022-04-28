@@ -1,35 +1,29 @@
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
+  import { onMounted, ref, watch } from 'vue';
   import { useThemeStore, ThemeType } from '@/store/theme';
   import { useRoute, useRouter } from 'vue-router';
   import Iconfont from '@/components/common/iconfont/Iconfont.vue';
   import { useConfigStore } from '@/store/config';
 
   const themeStore = useThemeStore();
-  // header高度
+  const configState = useConfigStore();
+  // header栏高度
   let height = ref<string>('65px');
   // 当前滚动高度
-  let currentScrollDistance = 0;
-  let move = ref<boolean>(false);
+  let currentScrollTop = 0;
 
   // 检测滚动
-  const scroll = (): void => {
-    const distance: number = document.documentElement.scrollTop || document.body.scrollTop;
-    if (distance > currentScrollDistance && !move.value) {
-      if (distance > 120) {
+  watch(
+    () => configState.scrollTop,
+    (value: number) => {
+      if (value > currentScrollTop && value > 120) {
         height.value = '0px';
+      } else {
+        height.value = '65px';
       }
-    } else {
-      height.value = '65px';
+      currentScrollTop = value;
     }
-    currentScrollDistance = distance;
-  };
-  const configState = useConfigStore();
-  onMounted(() => {
-    document.addEventListener('scroll', () => {
-      scroll();
-    });
-  });
+  );
   const router = useRouter();
   const route = useRoute();
   const dumpPage = (path: string): void => {

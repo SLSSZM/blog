@@ -11,13 +11,7 @@
     iconSize: '24px',
     text: '',
   });
-  let text = ref<string>('');
-  watch(
-    (): string => props.text,
-    (value: string): void => {
-      text.value = value;
-    }
-  );
+  let text = ref<string>(props.text);
   const emits = defineEmits<{
     (e: 'search', value: string): void;
   }>();

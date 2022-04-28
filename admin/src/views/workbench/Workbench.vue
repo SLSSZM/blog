@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import { workbenchApi, Workbench } from '@/network/api/base';
+  import { workbenchApi, Workbench, deleteUploadApi } from '@/network/api/base';
   import { reactive } from 'vue';
   import dayjs from 'dayjs';
   import { LocationQueryRaw, useRouter } from 'vue-router';
+  import { ElMessage } from 'element-plus';
 
   let data = reactive<{ value: Workbench }>({ value: {} });
   const created = async (): Promise<void> => {
@@ -14,6 +15,12 @@
   const router = useRouter();
   const handlerInfo = (value: any): void => {
     router.push({ path: '/article/edit', query: value as LocationQueryRaw });
+  };
+  const isRoot = JSON.parse(localStorage.getItem('INFO') || '{}').role === 'root';
+  console.log(JSON.parse(localStorage.getItem('INFO') || '{}').role);
+  const handlerDeleteUploads = async (): Promise<void> => {
+    await deleteUploadApi();
+    ElMessage.success('清除成功');
   };
 </script>
 
@@ -43,6 +50,10 @@
       <span>类型：{{ item.type === 'post' ? '博客' : '日常' }}</span>
       <span>创建时间：{{ dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss') }}</span>
       <span class="views">访问量：{{ item.views }}</span>
+    </div>
+    <div class="delete-uploads" v-if="isRoot">
+      <span>删除存在服务器上的过期图片，谨慎使用！</span>
+      <el-button type="danger" @click="handlerDeleteUploads"> 清除过期图片 </el-button>
     </div>
   </div>
 </template>
@@ -104,5 +115,20 @@
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+  }
+  .delete-uploads {
+    margin: 20px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    // justify-content: space-between;
+    span {
+      color: var(--color_tint);
+      margin-bottom: 10px;
+      margin-right: 20px;
+    }
+    .el-button {
+      margin-bottom: 10px;
+    }
   }
 </style>

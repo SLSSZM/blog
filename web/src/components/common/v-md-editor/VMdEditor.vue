@@ -63,9 +63,17 @@
   :deep(.vuepress-markdown-body) {
     background-color: transparent;
     color: var(--fc);
+    min-width: 0;
     .v-md-plugin-tip {
       background-color: var(--bg);
       opacity: 0.8;
+    }
+    div[class*='v-md-pre-wrapper-'] {
+      margin: 0 !important;
+      border-radius: 6px !important;
+    }
+    &:not(.custom) {
+      padding: 0 !important;
     }
   }
 </style>
