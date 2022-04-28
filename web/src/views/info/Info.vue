@@ -33,11 +33,13 @@
       <div class="image" v-if="article.data.image">
         <img :src="article.data.image" />
       </div>
-      <div class="text">
-        <h1>{{ article.data.title }}</h1>
-        <p>{{ article.data.description }}</p>
+      <div class="body">
+        <div class="text">
+          <h1>{{ article.data.title }}</h1>
+          <p>{{ article.data.description }}</p>
+        </div>
+        <v-md-editor :value="article.data.body" />
       </div>
-      <v-md-editor :value="article.data.body" />
     </chunk>
   </div>
 </template>
@@ -73,16 +75,18 @@
     }
   }
   .info {
-    padding: 0 10px 10px;
     .image {
       img {
         object-fit: cover;
         width: 100%;
       }
     }
-    .text {
-      h1 {
-        text-align: center;
+    .body {
+      padding: 0 15px 20px;
+      .text {
+        h1 {
+          text-align: center;
+        }
       }
     }
   }
@@ -90,7 +94,7 @@
     .header {
       height: 25px;
     }
-    .info .text h1 {
+    .info .body .text h1 {
       font-size: 30px;
     }
   }
@@ -98,7 +102,7 @@
     .header {
       height: 20px;
     }
-    .info .text h1 {
+    .info .body .text h1 {
       font-size: 25px;
     }
   }
